@@ -13,7 +13,9 @@ public class Main {
 					MainFrame frame = new MainFrame();
 					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					frame.pack();
+					frame.setSize(800, 450);
 					frame.setVisible(true);
+					frame.setResizable(false);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
