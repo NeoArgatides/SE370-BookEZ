@@ -98,18 +98,15 @@ public class MainFrame extends JFrame {
         		if(usernameTextField.getText() != "" && passwordTextField.getText() != "" && !usernameTaken(usernameTextField.getText())) {
         			BufferedWriter bf = null;
         			try {
-						bf = new BufferedWriter(new FileWriter("accounts.txt"));
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-        			try {
-						bf.write("\n" + usernameTextField.getText() + ',' + passwordTextField.getText() + ',');
+						bf = new BufferedWriter(new FileWriter("accounts.txt", true));
+						bf.write(usernameTextField.getText() + ',' + passwordTextField.getText() + ",\n");
 						bf.close();
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
+        		} else {
+        			//System.out.println("taken");
         		}
         	}
         });
@@ -130,7 +127,7 @@ public class MainFrame extends JFrame {
 		String line;
 		while(sc.hasNextLine()) {
 			line = sc.nextLine();
-			if(line.substring(0 , line.indexOf(",")) == username) {
+			if(line.substring(0 , line.indexOf(",")).equals(username)) {
 				return true;
 			}
 		}
