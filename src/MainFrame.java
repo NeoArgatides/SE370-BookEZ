@@ -15,8 +15,17 @@ import java.awt.GridLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
 
 public class MainFrame extends JFrame {
+	File file = new File("accounts.txt");
 	private JPanel mainPanel = new JPanel();
 	private JPanel loginPanel = new JPanel();
 	private JPanel menuPanel = new JPanel();
@@ -82,10 +91,49 @@ public class MainFrame extends JFrame {
 		titlePanel.add(loginLbl);
 		loginLbl.setHorizontalAlignment(SwingConstants.CENTER);
 		
-		
+		registerBtn.addActionListener(new ActionListener()
+        {
+        	public void actionPerformed(ActionEvent e)
+        	{
+        		if(usernameTextField.getText() != "" && passwordTextField.getText() != "" && !usernameTaken(usernameTextField.getText())) {
+        			BufferedWriter bf = null;
+        			try {
+						bf = new BufferedWriter(new FileWriter("accounts.txt"));
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+        			try {
+						bf.write("\n" + usernameTextField.getText() + ',' + passwordTextField.getText() + ',');
+						bf.close();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+        		}
+        	}
+        });
 		
 		mainPanel.setVisible(true);
 		loginPanel.setVisible(true);
 		cl.show(mainPanel, "1");
+	}
+	
+	boolean usernameTaken(String username) {
+		Scanner sc = null;
+		try {
+			sc = new Scanner(file);
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		}
+		
+		String line;
+		while(sc.hasNextLine()) {
+			line = sc.nextLine();
+			if(line.substring(0 , line.indexOf(",")) == username) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
