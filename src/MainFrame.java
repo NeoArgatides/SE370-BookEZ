@@ -50,7 +50,9 @@ public class MainFrame extends JFrame {
 		mainPanel.add(menuPanel, "2");
 		mainPanel.add(uploadPanel, "3");
 		mainPanel.add(tablePanel, "4");
+		mainPanel.setVisible(true);
 		
+		//login page
 		loginPanel.setLayout(new BorderLayout(0, 0));
 		loginPanel.setBackground(new Color(153, 204, 255));
 		textFieldPanel.setBackground(new Color(153, 204, 255));
@@ -90,29 +92,56 @@ public class MainFrame extends JFrame {
 		titleLbl.setHorizontalAlignment(SwingConstants.CENTER);
 		titlePanel.add(loginLbl);
 		loginLbl.setHorizontalAlignment(SwingConstants.CENTER);
-		
 		registerBtn.addActionListener(new ActionListener()
         {
         	public void actionPerformed(ActionEvent e)
         	{
-        		if(usernameTextField.getText() != "" && passwordTextField.getText() != "" && !usernameTaken(usernameTextField.getText())) {
+        		String username = usernameTextField.getText();
+        		String password = passwordTextField.getText();
+        		if(username != "" && password != "" && !usernameTaken(username)) {
         			BufferedWriter bf = null;
         			try {
 						bf = new BufferedWriter(new FileWriter("accounts.txt", true));
-						bf.write(usernameTextField.getText() + ',' + passwordTextField.getText() + ",\n");
+						bf.write(username + ',' + password + ",\n");
 						bf.close();
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
+        			login(username);
         		} else {
         			//System.out.println("taken");
         		}
         	}
         });
-		
-		mainPanel.setVisible(true);
+		loginBtn.addActionListener(new ActionListener()
+        {
+        	public void actionPerformed(ActionEvent e)
+        	{
+        		String username = usernameTextField.getText();
+        		String password = passwordTextField.getText();
+        		Scanner sc = null;
+        		try {
+        			sc = new Scanner(file);
+        		} catch (FileNotFoundException e1) {
+        			e1.printStackTrace();
+        		}
+        		
+        		String line;
+        		int indexUsername;
+        		while(sc.hasNextLine()) {
+        			line = sc.nextLine();
+        			indexUsername = line.indexOf(",");
+        			if(line.substring(0, indexUsername).equals(username) && line.substring(indexUsername+1, line.indexOf(",", indexUsername+1)).equals(password)) {
+        				login(username);
+        			}
+        		}
+        		
+        	}
+        });
 		loginPanel.setVisible(true);
+		
+		
 		cl.show(mainPanel, "1");
 	}
 	
@@ -132,5 +161,9 @@ public class MainFrame extends JFrame {
 			}
 		}
 		return false;
+	}
+	
+	void login(String username) {
+		cl.show(mainPanel, "2");
 	}
 }
