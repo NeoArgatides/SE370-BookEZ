@@ -180,6 +180,7 @@ public class MainFrame extends JFrame {
 		JLabel menuBottomLbl = new JLabel(imgIcon);
 		menuBottomPanel.add(menuBottomLbl);
 		
+		
 	}
 	
 	boolean usernameTaken(String username) {
