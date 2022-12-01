@@ -2,6 +2,8 @@ import java.awt.CardLayout;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.BorderLayout;
 import javax.swing.JSplitPane;
@@ -23,14 +25,14 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
+import java.awt.FlowLayout;
 
 public class MainFrame extends JFrame {
 	File file = new File("accounts.txt");
+	String currentUser;
 	private JPanel mainPanel = new JPanel();
 	private JPanel loginPanel = new JPanel();
 	private JPanel menuPanel = new JPanel();
-	private JPanel uploadPanel = new JPanel();
-	private JPanel tablePanel = new JPanel();
 	private CardLayout cl = new CardLayout();
 	private final JButton registerBtn = new JButton("Register");
 	private final JButton loginBtn = new JButton("Login");
@@ -41,15 +43,24 @@ public class MainFrame extends JFrame {
 	private final JTextField passwordTextField = new JTextField();
 	private final JPanel buttonPanel = new JPanel();
 	private final JPanel titlePanel = new JPanel();
+	private final JPanel menuTitlePanel = new JPanel();
+	private final JLabel menuTitleLbl = new JLabel("BookEZ");
+	private final JLabel menuInstructLbl = new JLabel("Menu");
+	private final JPanel menuBackPanel = new JPanel();
+	private final JButton menuBackBtn = new JButton("Back to login");
+	private final JPanel menuOptionPanel = new JPanel();
+	private final JButton menuUploadBtn = new JButton("Upload data");
+	private final JButton menuTableBtn = new JButton("View ROI Table");
+	private final JPanel menuBottomPanel = new JPanel();
 	
 	MainFrame() {
 		getContentPane().add(mainPanel);
 		mainPanel.setBackground(new Color(153, 204, 255));
 		mainPanel.setLayout(cl);
 		mainPanel.add(loginPanel, "1");
+		menuPanel.setBackground(new Color(153, 204, 255));
 		mainPanel.add(menuPanel, "2");
-		mainPanel.add(uploadPanel, "3");
-		mainPanel.add(tablePanel, "4");
+		menuPanel.setLayout(new BorderLayout(0, 0));
 		mainPanel.setVisible(true);
 		
 		//login page
@@ -98,7 +109,7 @@ public class MainFrame extends JFrame {
         	{
         		String username = usernameTextField.getText();
         		String password = passwordTextField.getText();
-        		if(username != "" && password != "" && !usernameTaken(username)) {
+        		if(!username.equals("") && !password.equals("") && !usernameTaken(username)) {
         			BufferedWriter bf = null;
         			try {
 						bf = new BufferedWriter(new FileWriter("accounts.txt", true));
@@ -140,9 +151,35 @@ public class MainFrame extends JFrame {
         	}
         });
 		loginPanel.setVisible(true);
-		
-		
 		cl.show(mainPanel, "1");
+		
+		//main menu
+		menuTitlePanel.setBackground(new Color(204, 204, 255));
+		menuPanel.add(menuTitlePanel, BorderLayout.NORTH);
+		menuTitlePanel.setLayout(new GridLayout(0, 1, 0, 0));
+		menuTitleLbl.setHorizontalAlignment(SwingConstants.CENTER);
+		menuTitleLbl.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+		menuTitlePanel.add(menuTitleLbl);
+		menuInstructLbl.setHorizontalAlignment(SwingConstants.CENTER);
+		menuTitlePanel.add(menuInstructLbl);
+		menuBackPanel.setBackground(new Color(153, 204, 255));
+		
+		menuPanel.add(menuBackPanel, BorderLayout.WEST);
+		
+		menuBackPanel.add(menuBackBtn);
+		menuOptionPanel.setBackground(new Color(153, 204, 255));
+		
+		menuPanel.add(menuOptionPanel, BorderLayout.CENTER);
+		menuOptionPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		menuOptionPanel.add(menuUploadBtn);
+		menuOptionPanel.add(menuTableBtn);
+		menuBottomPanel.setBackground(new Color(153, 204, 255));
+		
+		menuPanel.add(menuBottomPanel, BorderLayout.SOUTH);
+		Icon imgIcon = new ImageIcon(this.getClass().getResource("enchanting.gif"));
+		JLabel menuBottomLbl = new JLabel(imgIcon);
+		menuBottomPanel.add(menuBottomLbl);
+		
 	}
 	
 	boolean usernameTaken(String username) {
@@ -165,5 +202,8 @@ public class MainFrame extends JFrame {
 	
 	void login(String username) {
 		cl.show(mainPanel, "2");
+		currentUser = username;
+		usernameTextField.setText("");
+		passwordTextField.setText("");
 	}
 }
