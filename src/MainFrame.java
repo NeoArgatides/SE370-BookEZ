@@ -178,7 +178,7 @@ public class MainFrame extends JFrame {
 		menuPanel.add(menuBottomPanel, BorderLayout.SOUTH);
 		Icon imgIcon = new ImageIcon(this.getClass().getResource("enchanting.gif"));
 		JLabel menuBottomLbl = new JLabel(imgIcon);
-		menuBottomPanel.add(menuBottomLbl);
+		menuBottomPanel.add(menuBottomLbl); 
 		
 		
 	}
