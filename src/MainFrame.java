@@ -174,12 +174,12 @@ public class MainFrame extends JFrame {
 		menuOptionPanel.add(menuUploadBtn);
 		menuOptionPanel.add(menuTableBtn);
 		menuBottomPanel.setBackground(new Color(153, 204, 255));
-		/*
+		
 		menuPanel.add(menuBottomPanel, BorderLayout.SOUTH);
-		Icon imgIcon = new ImageIcon(getClass().getResource("enchanting.gif"));
+		Icon imgIcon = new ImageIcon(this.getClass().getResource("enchanting.gif"));
 		JLabel menuBottomLbl = new JLabel(imgIcon);
 		menuBottomPanel.add(menuBottomLbl);
-		*/
+		
 		
 	}
 	
