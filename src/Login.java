@@ -21,6 +21,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 public class Login extends JPanel {
+	private static final long serialVersionUID = 1L;
 	private final JButton registerBtn = new JButton("Register");
 	private final JButton loginBtn = new JButton("Login");
 	private final JLabel titleLbl = new JLabel("BookEZ");
