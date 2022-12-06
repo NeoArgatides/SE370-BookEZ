@@ -43,49 +43,35 @@ public class Login extends JPanel {
 		textFieldPanel.setBackground(new Color(153, 204, 255));
 		add(textFieldPanel, BorderLayout.CENTER);
 		GridBagLayout gbl_textFieldPanel = new GridBagLayout();
-		gbl_textFieldPanel.columnWidths = new int[]{0, 0, 0, 0};
-		gbl_textFieldPanel.rowHeights = new int[]{0, 0, 0, 0};
-		gbl_textFieldPanel.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_textFieldPanel.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
 		textFieldPanel.setLayout(gbl_textFieldPanel);
 		
 		GridBagConstraints gbc_usernameLbl = new GridBagConstraints();
 		gbc_usernameLbl.insets = new Insets(0, 0, 5, 5);
-		gbc_usernameLbl.anchor = GridBagConstraints.EAST;
-		gbc_usernameLbl.gridx = 2;
-		gbc_usernameLbl.gridy = 1;
+		gbc_usernameLbl.gridx = 0;
+		gbc_usernameLbl.gridy = 0;
 		textFieldPanel.add(usernameLbl, gbc_usernameLbl);
 		usernameTextField.setColumns(10);
 		usernameTextField.setPreferredSize(new Dimension(400, 24));
 		GridBagConstraints gbc_usernameTextField = new GridBagConstraints();
-		gbc_usernameTextField.anchor = GridBagConstraints.SOUTHWEST;
 		gbc_usernameTextField.insets = new Insets(0, 0, 5, 0);
-		gbc_usernameTextField.gridx = 3;
-		gbc_usernameTextField.gridy = 1;
+		gbc_usernameTextField.gridx = 2;
+		gbc_usernameTextField.gridy = 0;
 		textFieldPanel.add(usernameTextField, gbc_usernameTextField);
 		usernameTextField.setUI(new HintTextFieldUI(" Username", true));
 		
 		GridBagConstraints gbc_passwordLbl = new GridBagConstraints();
 		gbc_passwordLbl.insets = new Insets(0, 0, 5, 5);
-		gbc_passwordLbl.anchor = GridBagConstraints.EAST;
-		gbc_passwordLbl.gridx = 2;
-		gbc_passwordLbl.gridy = 2;
+		gbc_passwordLbl.gridx = 0;
+		gbc_passwordLbl.gridy = 1;
 		textFieldPanel.add(passwordLbl, gbc_passwordLbl);
 		passwordTextField.setColumns(10);
 		passwordTextField.setPreferredSize(new Dimension(400, 24));
 		GridBagConstraints gbc_passwordTextField = new GridBagConstraints();
 		gbc_passwordTextField.insets = new Insets(0, 0, 5, 0);
-		gbc_passwordTextField.anchor = GridBagConstraints.NORTHWEST;
-		gbc_passwordTextField.gridx = 3;
-		gbc_passwordTextField.gridy = 2;
+		gbc_passwordTextField.gridx = 2;
+		gbc_passwordTextField.gridy = 1;
 		textFieldPanel.add(passwordTextField, gbc_passwordTextField);
 		passwordTextField.setUI(new HintTextFieldUI(" Password", true));
-		
-		GridBagConstraints gbc_errorLbl = new GridBagConstraints();
-		gbc_errorLbl.gridx = 3;
-		gbc_errorLbl.gridy = 3;
-		errorLbl.setHorizontalAlignment(SwingConstants.RIGHT);
-		textFieldPanel.add(errorLbl, gbc_errorLbl);
 		add(buttonPanel, BorderLayout.SOUTH);
 		buttonPanel.setLayout(new GridLayout(1, 0, 0, 0));
 		buttonPanel.add(registerBtn);
@@ -98,6 +84,13 @@ public class Login extends JPanel {
 		titleLbl.setHorizontalAlignment(SwingConstants.CENTER);
 		titlePanel.add(loginLbl);
 		loginLbl.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		GridBagConstraints gbc_errorLbl = new GridBagConstraints();
+		gbc_errorLbl.gridx = 2;
+		gbc_errorLbl.gridy = 3;
+		errorLbl.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+		errorLbl.setHorizontalAlignment(SwingConstants.RIGHT);
+		textFieldPanel.add(errorLbl, gbc_errorLbl);
 		errorLbl.setForeground(new Color(178, 34, 34));
 		registerBtn.addActionListener(new ActionListener()
         {
@@ -112,13 +105,11 @@ public class Login extends JPanel {
 						bf.write(username + ',' + password + ",\n");
 						bf.close();
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
         			mainFrame.login(username);
         		} else {
-        			errorLbl.setText("Invalid username and/or password");
-        			//System.out.println("taken");
+        			errorLbl.setText("Invalid name/PWD");
         		}
         	}
         });
@@ -146,7 +137,7 @@ public class Login extends JPanel {
         			}
         		}
         		if(!sc.hasNextLine()) {
-        			errorLbl.setText("Invalid username and/or password");
+        			errorLbl.setText("Invalid name/PWD");
         		}
         		
         	}

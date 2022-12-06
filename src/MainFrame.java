@@ -4,6 +4,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.EventQueue;
 import java.io.File;
 
 public class MainFrame extends JFrame {
@@ -61,5 +62,9 @@ public class MainFrame extends JFrame {
 	
 	void goToTable() {
 		cl.show(mainPanel, "5");
+	}
+	
+	String getUser() {
+		return currentUser;
 	}
 }
