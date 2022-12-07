@@ -13,14 +13,18 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import java.awt.Insets;
 
 public class Upload extends JPanel{
 	private final JPanel uploadTitlePanel = new JPanel();
 	private final JLabel uploadTitleLbl = new JLabel("BookEZ");
 	private final JLabel uploadInstructLbl = new JLabel("Upload Data");
 	private final JPanel uploadButtonPanel = new JPanel();
-	private final JButton uploadBackBtn = new JButton("Back to Menu");
 	private MainFrame mainFrame;
+	private final JButton uploadFileBtn = new JButton("Upload Image");
+	private final JPanel uploadBackPanel = new JPanel();
+	private final JButton uploadBackButton = new JButton("Back to menu");
+	private final JLabel filenameLbl = new JLabel("");
 	
 	Upload(MainFrame mainFrame) {
 		this.mainFrame = mainFrame;
@@ -37,26 +41,35 @@ public class Upload extends JPanel{
 		uploadInstructLbl.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		uploadTitlePanel.add(uploadInstructLbl);
-		uploadButtonPanel.setBackground(new Color(153, 204, 255));
 		
+		uploadBackPanel.setBackground(new Color(153, 204, 255));
+		add(uploadBackPanel, BorderLayout.WEST);
+		uploadBackPanel.add(uploadBackButton);
+		
+		uploadButtonPanel.setBackground(new Color(153, 204, 255));
 		add(uploadButtonPanel, BorderLayout.CENTER);
 		GridBagLayout gbl_uploadButtonPanel = new GridBagLayout();
-		gbl_uploadButtonPanel.columnWidths = new int[]{0, 0};
-		gbl_uploadButtonPanel.rowHeights = new int[]{0, 0};
-		gbl_uploadButtonPanel.columnWeights = new double[]{0.0, Double.MIN_VALUE};
-		gbl_uploadButtonPanel.rowWeights = new double[]{0.0, Double.MIN_VALUE};
 		uploadButtonPanel.setLayout(gbl_uploadButtonPanel);
+		GridBagConstraints gbc_uploadFileBtn = new GridBagConstraints();
+		gbc_uploadFileBtn.insets = new Insets(0, 0, 0, 5);
+		gbc_uploadFileBtn.gridx = 0;
+		gbc_uploadFileBtn.gridy = 0;
+		uploadButtonPanel.add(uploadFileBtn, gbc_uploadFileBtn);
 		
-		GridBagConstraints gbc_uploadBackBtn = new GridBagConstraints();
-		gbc_uploadBackBtn.gridx = 0;
-		gbc_uploadBackBtn.gridy = 0;
-		uploadButtonPanel.add(uploadBackBtn, gbc_uploadBackBtn);
-		uploadBackBtn.addActionListener(new ActionListener()
+		GridBagConstraints gbc_filenameLbl = new GridBagConstraints();
+		gbc_filenameLbl.gridx = 1;
+		gbc_filenameLbl.gridy = 0;
+		uploadButtonPanel.add(filenameLbl, gbc_filenameLbl);
+		uploadFileBtn.addActionListener(new ActionListener()
         {
         	public void actionPerformed(ActionEvent e)
         	{
-        		mainFrame.goToMenu();
+        		mainFrame.getManager().extractData(this);
         	}
         });
+	}
+	
+	public void displayFile(String filename) {
+		filenameLbl.setText(filename);
 	}
 }

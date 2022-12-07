@@ -18,7 +18,7 @@ public class MainFrame extends JFrame {
 	private JPanel ROIPanel = new ROITable(this);
 	private JPanel menuPanel = new Menu(this);
 	private CardLayout cl = new CardLayout();
-	
+	private ROIManager manager = new ROIManager();
 	
 	MainFrame() {
 		getContentPane().add(mainPanel);
@@ -66,5 +66,9 @@ public class MainFrame extends JFrame {
 	
 	String getUser() {
 		return currentUser;
+	}
+	
+	ROIManager getManager() {
+		return manager;
 	}
 }
