@@ -1,5 +1,13 @@
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Scanner;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -8,6 +16,11 @@ import org.apache.pdfbox.text.PDFTextStripper;
 
 public class ROIManager {
 	private Integer nextEnd;
+	private MainFrame mainFrame;
+	
+	ROIManager(MainFrame mainFrame) {
+		this.mainFrame = mainFrame;
+	}
 	
 	public void extractData(Upload uploadPage) {
 		JFileChooser fileUpload = new JFileChooser();//creating file chooser//testing 
@@ -36,7 +49,7 @@ public class ROIManager {
                     PDFTextStripper pdfTextStripper = new PDFTextStripper();//obtain text
                     String docText = pdfTextStripper.getText(pdfDocument);//turning text into string 
 
-                    outputWriter(docText, true);//getting info from each pdf and adding to output.text file
+                    outputWriter(docText);//getting info from each pdf and adding to output.text file
 
                     pdfDocument.close();//closing document
                     fis.close();//closing file input stream
@@ -50,7 +63,7 @@ public class ROIManager {
 	
 	//used to extract the desired information from an ebay order reciept pdf and add new info to output.text file
     //boolean used to determine wether the extracted information should be stored in the vector
-    protected void outputWriter(String s, boolean vector){
+    protected void outputWriter(String s){
 
         //strings to collect information
         String orderNum, total, shipCost, soldPrice, shipPaid, tax, profitC;
@@ -65,22 +78,16 @@ public class ROIManager {
         shipPaid = convertAndFind(s, "$", nextEnd, 0);
         tax = convertAndFind(s, "$",nextEnd, 0);
 
-        //if info should be added to vector 
-        if(vector == true){
-            //if sales taxes were not collected, set tax to 0
-            if(s.indexOf("Sales tax (eBay collected)") == -1){
-                tax = "$0";
-            }
-
-            //adding extracted info into a vector of strings 
-            v.add("Order number " + orderNum + "\n" + total + "\nCost: " + shipCost + "\n" + soldPrice + "\n" + shipPaid + "\n" + tax + "\n");//fix order
-        }
-
         //calculating profit after costs and if sales tax was collected 
         profitC = profitCalc(total, shipCost, tax);
 
         //adding all collected information to output.text file
-        addInfoToTable(orderNum, total, shipCost, soldPrice, shipPaid, tax, profitC);
+        try {
+			addInfoToDatabase(orderNum, total, shipCost, soldPrice, shipPaid, tax, profitC);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
     }//end of extractInfo
 	
@@ -96,4 +103,45 @@ public class ROIManager {
         return result;//returning result 
 
     }//end of convert and find
+	
+	String profitCalc(String total, String shipCost, String tax){
+
+        double profit = 0.0;//used for calculations
+        
+        //turning each string into a double for calculations 
+        double t = Double.parseDouble(total.substring(1));
+        double sC = Double.parseDouble(shipCost.substring(1));
+        double ta = Double.parseDouble(tax.substring(1));
+        
+        profit = t - sC - ta;//calculating profit 
+        
+        profit = Math.round(profit * 100) / 100.0;//rounding off for set precision 
+        String profitString = "$" + profit + "";//changing to string and adding $ for formatting
+
+        return profitString;//returning profit obtained 
+
+    }//end of profit calculation
+	
+	private void addInfoToDatabase(String orderNum, String total, String shipCost, String soldPrice, String shipPaid, String tax, String profit) throws IOException {
+		File file = new File("accounts.txt");
+
+		try {
+		    Scanner scanner = new Scanner(file);
+
+		    int lineNum = 0;
+		    while (scanner.hasNextLine()) {
+		        String line = scanner.nextLine();
+		        lineNum++;
+		        if(line.substring(0, line.indexOf(",")).equals(mainFrame.getUser())) { 
+		        	Path path = Paths.get("accounts.txt");
+		        	List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+		        	String userLine = lines.get(lineNum);
+		        	lines.set(lineNum, userLine.replace("\n", "") + ',' + orderNum + ',' + total + ',' + shipCost + ',' + soldPrice + ',' + shipPaid + ',' + tax + ",\n");
+		        	Files.write(path, lines, StandardCharsets.UTF_8);
+		        }
+		    }
+		} catch(FileNotFoundException e) { 
+			e.printStackTrace();
+		}
+    }//end of creating ROI table 
 }
