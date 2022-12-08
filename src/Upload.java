@@ -6,9 +6,6 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
-
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -16,6 +13,7 @@ import javax.swing.SwingConstants;
 import java.awt.Insets;
 
 public class Upload extends JPanel{
+	private static final long serialVersionUID = 1L;
 	private final JPanel uploadTitlePanel = new JPanel();
 	private final JLabel uploadTitleLbl = new JLabel("BookEZ");
 	private final JLabel uploadInstructLbl = new JLabel("Upload Data");

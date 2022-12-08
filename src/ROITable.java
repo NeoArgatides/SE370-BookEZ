@@ -26,9 +26,9 @@ import javax.swing.JButton;
 import javax.swing.JTable;
 
 public class ROITable extends JPanel{
+	private static final long serialVersionUID = 1L;
 	private MainFrame mainFrame;
-	private JTable ROITable;
-	private int tableSize;
+	private JTable roiTable;
 	
 	ROITable(MainFrame mainFrame) {
 		setBackground(new Color(153, 204, 255));
@@ -71,8 +71,9 @@ public class ROITable extends JPanel{
 	        public int getRowCount() { return 10;}
 	        public Object getValueAt(int row, int col) { return (row*col); }
 	    };*/
-	    
-	    JScrollPane scrollpane = new JScrollPane(constructTable());
+		
+		refreshTable();
+	    JScrollPane scrollpane = new JScrollPane(roiTable);
 		add(scrollpane, BorderLayout.CENTER);
 		
 	}
@@ -114,10 +115,15 @@ public class ROITable extends JPanel{
 		        }
 		        i++;
 		    }
+		    scanner.close();
 		} catch(FileNotFoundException e) { 
 			e.printStackTrace();
 		}
 		
 		return table;
+	}
+	
+	public void refreshTable() {
+		roiTable = constructTable();
 	}
 }

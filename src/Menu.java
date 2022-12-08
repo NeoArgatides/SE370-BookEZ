@@ -4,10 +4,6 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
@@ -15,6 +11,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 public class Menu extends JPanel {
+	private static final long serialVersionUID = 1L;
 	private MainFrame mainFrame;
 	
 	Menu(MainFrame mainFrame) {

@@ -140,6 +140,7 @@ public class ROIManager {
 		        	Files.write(path, lines, StandardCharsets.UTF_8);
 		        }
 		    }
+		    scanner.close();
 		} catch(FileNotFoundException e) { 
 			e.printStackTrace();
 		}
