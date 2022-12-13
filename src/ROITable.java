@@ -7,19 +7,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
 import java.util.Scanner;
 
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
+import javax.swing.table.*;
 
 import java.awt.BorderLayout;
 import javax.swing.JButton;
@@ -28,12 +21,14 @@ import javax.swing.JTable;
 public class ROITable extends JPanel{
 	private static final long serialVersionUID = 1L;
 	private MainFrame mainFrame;
-	private JTable roiTable;
+	private JTable roiTable = new JTable();
 	
 	ROITable(MainFrame mainFrame) {
 		setBackground(new Color(153, 204, 255));
 		this.mainFrame = mainFrame;
 		setLayout(new BorderLayout(0, 0));
+
+		roiTable.setFillsViewportHeight(true);
 		
 		JPanel tableTitlePanel = new JPanel();
 		tableTitlePanel.setBackground(new Color(204, 204, 255));
@@ -45,7 +40,7 @@ public class ROITable extends JPanel{
 		tableTitleLbl.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		tableTitlePanel.add(tableTitleLbl);
 		
-		JLabel tableInstructLbl = new JLabel("Menu");
+		JLabel tableInstructLbl = new JLabel("ROI Table");
 		tableInstructLbl.setHorizontalAlignment(SwingConstants.CENTER);
 		tableTitlePanel.add(tableInstructLbl);
 		
@@ -62,68 +57,56 @@ public class ROITable extends JPanel{
         		mainFrame.goToMenu();
         	}
         });
-		
-		//construct table
-		
-		/*
-		TableModel dataModel = new AbstractTableModel() {
-	        public int getColumnCount() { return 10; }
-	        public int getRowCount() { return 10;}
-	        public Object getValueAt(int row, int col) { return (row*col); }
-	    };*/
-		
-		refreshTable();
-	    JScrollPane scrollpane = new JScrollPane(roiTable);
-		add(scrollpane, BorderLayout.CENTER);
-		
-	}
-	
-	JTable constructTable() {
-		Object[] columnNames = {"#", "Order #", "Total", "Shipping Cost", "Price", "Shipping Paid", "Tax"};
-		JTable table = new JTable(new DefaultTableModel(columnNames, 1));
-		table.setFillsViewportHeight(true);
-		DefaultTableModel model = (DefaultTableModel) table.getModel();
-		String orderNum = null, total = null, shipCost = null, soldPrice = null, shipPaid = null, tax = null;
-		
-		File file = new File("accounts.txt");
-		try {
-		    Scanner scanner = new Scanner(file);
-		    int i = 1;
-		    int nextIndex;
 
-		    while (scanner.hasNextLine()) {
-		        String line = scanner.nextLine();
-		        if(line.substring(0, line.indexOf(",")).equals(mainFrame.getUser())) {
-		        	nextIndex = line.indexOf(",");
-		        	nextIndex = line.indexOf(",", nextIndex+1);
-		        	
-		        	while(line.indexOf(",", nextIndex+1) != -1) {
-		        		orderNum = line.substring(nextIndex+1, line.indexOf(",", nextIndex+1));
-		        		nextIndex = line.indexOf(",", nextIndex+1);
-		        		total = line.substring(nextIndex+1, line.indexOf(",", nextIndex+1));
-		        		nextIndex = line.indexOf(",", nextIndex+1);
-		        		shipCost = line.substring(nextIndex+1, line.indexOf(",", nextIndex+1));
-		        		nextIndex = line.indexOf(",", nextIndex+1);
-		        		soldPrice = line.substring(nextIndex+1, line.indexOf(",", nextIndex+1));
-		        		nextIndex = line.indexOf(",", nextIndex+1);
-		        		shipPaid = line.substring(nextIndex+1, line.indexOf(",", nextIndex+1));
-		        		nextIndex = line.indexOf(",", nextIndex+1);
-		        		tax = line.substring(nextIndex+1, line.indexOf(",", nextIndex+1));
-		        		nextIndex = line.indexOf(",", nextIndex+1);
-		        		model.addRow(new Object[]{i, orderNum, total, shipCost, soldPrice, shipPaid, tax});
-		        	}
-		        }
-		        i++;
-		    }
-		    scanner.close();
-		} catch(FileNotFoundException e) { 
-			e.printStackTrace();
-		}
-		
-		return table;
+		//add table
+		refreshTable();
+	    JScrollPane scrollPane = new JScrollPane(roiTable);
+		add(scrollPane, BorderLayout.CENTER);
 	}
 	
 	public void refreshTable() {
-		roiTable = constructTable();
+		String[] columnNames = new String[] {"#", "Order #", "Total", "Shipping Cost", "Price", "Shipping Paid", "Tax"};
+		DefaultTableModel model = new DefaultTableModel(0, 0);
+		model.setColumnIdentifiers(columnNames);
+
+		File file = new File("accounts.txt");
+
+		Scanner scanner = null;
+		try {
+			scanner = new Scanner(file);
+		} catch (FileNotFoundException e) {
+			throw new RuntimeException(e);
+		}
+		int i = 1;
+		int nextIndex;
+
+		while (scanner.hasNextLine()) {
+			String line = scanner.nextLine();
+			if(line.substring(0, line.indexOf(",")).equals(mainFrame.getUser())) {
+				nextIndex = line.indexOf(",");
+				nextIndex = line.indexOf(",", nextIndex+1);
+				while(line.indexOf(",", nextIndex+1) != -1) {
+					String orderNum = line.substring(nextIndex+1, line.indexOf(",", nextIndex+1));
+					nextIndex = line.indexOf(",", nextIndex+1);
+					String total = line.substring(nextIndex+1, line.indexOf(",", nextIndex+1));
+					nextIndex = line.indexOf(",", nextIndex+1);
+					String shipCost = line.substring(nextIndex+1, line.indexOf(",", nextIndex+1));
+					nextIndex = line.indexOf(",", nextIndex+1);
+					String soldPrice = line.substring(nextIndex+1, line.indexOf(",", nextIndex+1));
+					nextIndex = line.indexOf(",", nextIndex+1);
+					String shipPaid = line.substring(nextIndex+1, line.indexOf(",", nextIndex+1));
+					nextIndex = line.indexOf(",", nextIndex+1);
+					String tax = line.substring(nextIndex+1, line.indexOf(",", nextIndex+1));
+					nextIndex = line.indexOf(",", nextIndex+1);
+
+					model.addRow(new Object[] {String.valueOf(i), orderNum, total, shipCost, soldPrice, shipPaid, tax});
+					i++;
+				}
+				break;
+			}
+		}
+		scanner.close();
+
+		roiTable.setModel(model);
 	}
 }

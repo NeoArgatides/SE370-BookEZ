@@ -131,14 +131,16 @@ public class ROIManager {
 		    int lineNum = 0;
 		    while (scanner.hasNextLine()) {
 		        String line = scanner.nextLine();
-		        lineNum++;
-		        if(line.substring(0, line.indexOf(",")).equals(mainFrame.getUser())) { 
-		        	Path path = Paths.get("accounts.txt");
-		        	List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
-		        	String userLine = lines.get(lineNum);
-		        	lines.set(lineNum, userLine.replace("\n", "") + ',' + orderNum + ',' + total + ',' + shipCost + ',' + soldPrice + ',' + shipPaid + ',' + tax + ",\n");
-		        	Files.write(path, lines, StandardCharsets.UTF_8);
-		        }
+                if(!line.equals("")) {
+                    if (line.substring(0, line.indexOf(",")).equals(mainFrame.getUser())) {
+                        Path path = Paths.get("accounts.txt");
+                        List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+                        String userLine = lines.get(lineNum);
+                        lines.set(lineNum, userLine.replace("\n", "") + orderNum + ',' + total + ',' + shipCost + ',' + soldPrice + ',' + shipPaid + ',' + tax + ',');
+                        Files.write(path, lines, StandardCharsets.UTF_8);
+                    }
+                }
+                lineNum++;
 		    }
 		    scanner.close();
 		} catch(FileNotFoundException e) { 

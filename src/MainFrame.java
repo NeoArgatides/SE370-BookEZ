@@ -27,6 +27,7 @@ public class MainFrame extends JFrame {
 		mainPanel.add(uploadPanel, "3");
 		mainPanel.add(catalogPanel, "4");
 		mainPanel.add(ROIPanel, "5");
+		//((ROITable) ROIPanel).refreshTable();
 		mainPanel.setVisible(true);
 		
 		cl.show(mainPanel, "1");
@@ -59,8 +60,8 @@ public class MainFrame extends JFrame {
 	}
 	
 	void goToTable() {
-		cl.show(mainPanel, "5");
 		((ROITable) ROIPanel).refreshTable();
+		cl.show(mainPanel, "5");
 	}
 	
 	String getUser() {

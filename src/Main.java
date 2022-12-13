@@ -13,8 +13,8 @@ public class Main {
 					frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					frame.pack();
 					frame.setSize(800, 450);
+					//frame.setResizable(false);
 					frame.setVisible(true);
-					frame.setResizable(false);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
