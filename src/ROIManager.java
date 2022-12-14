@@ -78,12 +78,9 @@ public class ROIManager {
         shipPaid = convertAndFind(s, "$", nextEnd, 0);
         tax = convertAndFind(s, "$",nextEnd, 0);
 
-        //calculating profit after costs and if sales tax was collected 
-        profitC = profitCalc(total, shipCost, tax);
-
         //adding all collected information to output.text file
         try {
-			addInfoToDatabase(orderNum, total, shipCost, soldPrice, shipPaid, tax, profitC);
+			addInfoToDatabase(orderNum, total, shipCost, soldPrice, shipPaid, tax);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -104,7 +101,7 @@ public class ROIManager {
 
     }//end of convert and find
 	
-	String profitCalc(String total, String shipCost, String tax){
+	double profitCalc(String total, String shipCost, String tax){
 
         double profit = 0.0;//used for calculations
         
@@ -115,14 +112,13 @@ public class ROIManager {
         
         profit = t - sC - ta;//calculating profit 
         
-        profit = Math.round(profit * 100) / 100.0;//rounding off for set precision 
-        String profitString = "$" + profit + "";//changing to string and adding $ for formatting
+        profit = Math.round(profit * 100) / 100.0;//rounding off for set precision
 
-        return profitString;//returning profit obtained 
+        return profit;//returning profit obtained
 
     }//end of profit calculation
 	
-	private void addInfoToDatabase(String orderNum, String total, String shipCost, String soldPrice, String shipPaid, String tax, String profit) throws IOException {
+	private void addInfoToDatabase(String orderNum, String total, String shipCost, String soldPrice, String shipPaid, String tax) throws IOException {
 		File file = new File("accounts.txt");
 
 		try {

@@ -22,6 +22,8 @@ public class ROITable extends JPanel{
 	private static final long serialVersionUID = 1L;
 	private MainFrame mainFrame;
 	private JTable roiTable = new JTable();
+	private JLabel tableProfitLbl = new JLabel();
+	private double totalProfit = 0;
 	
 	ROITable(MainFrame mainFrame) {
 		setBackground(new Color(153, 204, 255));
@@ -58,13 +60,24 @@ public class ROITable extends JPanel{
         	}
         });
 
+		JPanel tableProfitPanel = new JPanel();
+		tableProfitPanel.setBackground(new Color(153, 204, 255));
+		add(tableProfitPanel, BorderLayout.SOUTH);
+		tableProfitPanel.setLayout(new BorderLayout(0, 0));
+
 		//add table
 		refreshTable();
 	    JScrollPane scrollPane = new JScrollPane(roiTable);
 		add(scrollPane, BorderLayout.CENTER);
+
+		Font f = tableProfitLbl.getFont();
+		tableProfitLbl.setHorizontalAlignment(SwingConstants.CENTER);
+		tableProfitLbl.setFont(f.deriveFont(f.getStyle() | Font.BOLD, 15));
+		tableProfitPanel.add(tableProfitLbl);
 	}
 	
 	public void refreshTable() {
+		totalProfit = 0;
 		String[] columnNames = new String[] {"#", "Order #", "Total", "Shipping Cost", "Price", "Shipping Paid", "Tax"};
 		DefaultTableModel model = new DefaultTableModel(0, 0);
 		model.setColumnIdentifiers(columnNames);
@@ -100,13 +113,14 @@ public class ROITable extends JPanel{
 					nextIndex = line.indexOf(",", nextIndex+1);
 
 					model.addRow(new Object[] {String.valueOf(i), orderNum, total, shipCost, soldPrice, shipPaid, tax});
+					totalProfit += mainFrame.getManager().profitCalc(total, shipCost, tax);
 					i++;
 				}
 				break;
 			}
 		}
 		scanner.close();
-
+		tableProfitLbl.setText("Total profit: $" + String.valueOf(totalProfit) + "");
 		roiTable.setModel(model);
 	}
 }
