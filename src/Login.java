@@ -36,9 +36,7 @@ public class Login extends JPanel implements User_IF{
 	private final JLabel passwordLbl = new JLabel("Password:");
 	private MainFrame mainFrame;
 	
-	//Singleton object
-	private static Login user = null;
-
+	
 	Login(MainFrame mainFrame) {
 
 		this.mainFrame = mainFrame;

@@ -18,7 +18,7 @@ import java.awt.BorderLayout;
 import javax.swing.JButton;
 import javax.swing.JTable;
 
-public class ROITable extends JPanel implements SortingROITable_IF{
+public class ROITable extends JPanel{
 	private static final long serialVersionUID = 1L;
 	private MainFrame mainFrame;
 	private JTable roiTable = new JTable();
