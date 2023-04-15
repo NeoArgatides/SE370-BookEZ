@@ -8,7 +8,7 @@ public class ConfigurationLoader {
     // private String databaseName;
 
     public ConfigurationLoader(String dbUrl,String user, String pass){
-       this.dbUrl = dbUrl;
+        this.dbUrl = dbUrl;
         this.user = user;
         this.pass = pass;
     }
@@ -16,6 +16,7 @@ public class ConfigurationLoader {
     public void loadConfiguration() {
         try {
             // Read the JSON file
+            ///config.json
             JsonReader jsonReader = Json.createReader(new FileReader("config.json"));
             JsonObject jsonObject = jsonReader.readObject();
             jsonReader.close();
