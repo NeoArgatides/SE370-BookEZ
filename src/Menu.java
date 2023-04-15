@@ -9,6 +9,7 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import java.io.FileReader;
 
 public class Menu extends JPanel {
 	private static final long serialVersionUID = 1L;

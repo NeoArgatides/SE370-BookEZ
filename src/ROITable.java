@@ -18,7 +18,7 @@ import java.awt.BorderLayout;
 import javax.swing.JButton;
 import javax.swing.JTable;
 
-public class ROITable extends JPanel{
+public class ROITable extends JPanel implements dbAO_IF{
 	private static final long serialVersionUID = 1L;
 	private MainFrame mainFrame;
 	private JTable roiTable = new JTable();
@@ -111,7 +111,8 @@ public class ROITable extends JPanel{
 					nextIndex = line.indexOf(",", nextIndex+1);
 					String tax = line.substring(nextIndex+1, line.indexOf(",", nextIndex+1));
 					nextIndex = line.indexOf(",", nextIndex+1);
-
+					
+					//modify this to add on the database
 					model.addRow(new Object[] {String.valueOf(i), orderNum, total, shipCost, soldPrice, shipPaid, tax});
 					totalProfit += mainFrame.getManager().profitCalc(total, shipCost, tax);
 					i++;
