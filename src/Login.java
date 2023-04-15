@@ -20,7 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-public class Login extends JPanel {
+public class Login extends JPanel implements User_IF{
 	private static final long serialVersionUID = 1L;
 	private final JButton registerBtn = new JButton("Register");
 	private final JButton loginBtn = new JButton("Login");
@@ -36,7 +36,11 @@ public class Login extends JPanel {
 	private final JLabel passwordLbl = new JLabel("Password:");
 	private MainFrame mainFrame;
 	
+	//Singleton object
+	private static Login user = null;
+
 	Login(MainFrame mainFrame) {
+
 		this.mainFrame = mainFrame;
 		setLayout(new BorderLayout(0, 0));
 		setBackground(new Color(153, 204, 255));
@@ -113,6 +117,7 @@ public class Login extends JPanel {
         		}
         	}
         });
+		//verification
 		loginBtn.addActionListener(new ActionListener()
         {
         	public void actionPerformed(ActionEvent e)
@@ -147,13 +152,13 @@ public class Login extends JPanel {
 		
 	}
 	
-	void login() {
+	public void login() {
 		usernameTextField.setText("");
 		passwordTextField.setText("");
 		errorLbl.setText("");
 	}
 	
-	boolean usernameTaken(String username) {
+	public boolean usernameTaken(String username) {
 		Scanner sc = null;
 		try {
 			sc = new Scanner(mainFrame.getFile());

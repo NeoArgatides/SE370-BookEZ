@@ -1,10 +1,10 @@
 
-public class SortingROITableProxy implements SortingROITable_IF{
-
-    @Override
-    public String sort() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'sort'");
-    }
+public abstract class SortingROITableProxy implements SortingROITable_IF{
     
+    
+    @Override
+    public abstract void refreshTable();
+
+    
+   
 }
