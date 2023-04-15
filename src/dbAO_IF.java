@@ -1,5 +1,3 @@
-public interface dbAO_IF {
-    
-
+public interface dbAO_IF {    
 
 }
