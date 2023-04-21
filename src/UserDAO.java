@@ -20,24 +20,57 @@ public class UserDAO {
         return instance;
     }
 
-    public User getUserByUsernameAndPassword(String username, String password) throws SQLException {
+    // public User getUserByUsernameAndPassword(String username, String password) throws SQLException {
     
         
+    //     ResultSet rs = null;
+    //     User user = null;
+    //     String query = "SELECT * FROM users WHERE username = ? AND password = ?";
+
+    //     try(Connection conn = dbConnection.getConnection();PreparedStatement stmt = conn.prepareStatement(query)) {
+    //         stmt.setString(1, username);
+    //         stmt.setString(2, password);
+    //         rs = stmt.executeQuery();
+
+    //         if (rs.next()) {
+    //             user = new User(rs.getInt("id"), rs.getString("username"), rs.getString("password"));
+    //         }
+    //     } 
+    //     return user;
+
+    // }
+
+    public User getUserByUsernameAndPassword(String username, String password) throws SQLException {
         ResultSet rs = null;
         User user = null;
         String query = "SELECT * FROM users WHERE username = ? AND password = ?";
-
-        try(Connection conn = dbConnection.getConnection();PreparedStatement stmt = conn.prepareStatement(query)) {
+        
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, username);
             stmt.setString(2, password);
             rs = stmt.executeQuery();
-
+    
             if (rs.next()) {
                 user = new User(rs.getInt("id"), rs.getString("username"), rs.getString("password"));
             }
-        } 
+        } catch(Exception e){
+           System.out.println("bue");
+            e.printStackTrace();
+        }
+        finally {
+            // Close database resources
+            try{
+                if (rs != null){
+                    rs.close();
+                }
+            } catch(SQLException s){
+                s.printStackTrace();
+            }
+            
+            // The PreparedStatement is automatically closed when the Connection is closed
+        }
         return user;
-
     }
     // public User getUserByUsername(String username) throws SQLException {
     //     String query = "SELECT * FROM users WHERE username = ?";

@@ -2,62 +2,71 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class ReceiptDAO {
 
     //
     private static ReceiptDAO instance;
+    //should we have a connection obj?
+    private DBConnection dbConnection;
 
-    private final Connection myConn;
+//single instance
 
-    private ReceiptDAO(Connection myConn) {
-        this.myConn = myConn;
+    private ReceiptDAO() throws SQLException {
+        dbConnection = DBConnection.getInstance();
     }
 
-    //
-    public static ReceiptDAO getInstance(Connection myConn) {
+
+    //returns the singleton instance of the class
+    public static synchronized ReceiptDAO getInstance() throws SQLException {
         if (instance == null) {
-            instance = new ReceiptDAO(myConn);
+            instance = new ReceiptDAO();
         }
         return instance;
     }
 
 
     // Add a receipt to the database
-    public void addReceipt(Receipt receipt) throws SQLException {
-        String query = "INSERT INTO receipts (user_id, order_number, total, shipping_cost, price, shipping_paid, tax) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        PreparedStatement statement = myConn.prepareStatement(query);
-        statement.setInt(1, receipt.getUserId());
-        statement.setInt(2, receipt.getOrderNumber());
-        statement.setDouble(3, receipt.getTotal());
-        statement.setDouble(4, receipt.getShippingCost());
-        statement.setDouble(5, receipt.getPrice());
-        statement.setDouble(6, receipt.getShippingPaid());
-        statement.setDouble(7, receipt.getTax());
-        statement.executeUpdate();
-    }
+    // public void addReceipt(Receipt receipt) throws SQLException {
+    //     String query = "INSERT INTO receipts (user_id, order_number, total, shipping_cost, price, shipping_paid, tax) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    //     PreparedStatement statement = dbConnection.prepareStatement(query);
+    //     statement.setInt(1, receipt.getUserId());
+    //     statement.setInt(2, receipt.getOrderNumber());
+    //     statement.setDouble(3, receipt.getTotal());
+    //     statement.setDouble(4, receipt.getShippingCost());
+    //     statement.setDouble(5, receipt.getPrice());
+    //     statement.setDouble(6, receipt.getShippingPaid());
+    //     statement.setDouble(7, receipt.getTax());
+    //     statement.executeUpdate();
+    // }
 
-    public List<Receipt> getReceiptsForUser(User user, Connection connection) throws SQLException {
-        List<Receipt> receipts = new ArrayList<>();
-        String query = "SELECT * FROM receipts WHERE user_id = ?";
-        PreparedStatement statement = connection.prepareStatement(query);
-        statement.setInt(1, user.getId());
-        ResultSet resultSet = statement.executeQuery();
-        while (resultSet.next()) {
-            int receiptId = resultSet.getInt("id");
-            int userId = resultSet.getInt("user_id");
-            int orderId = resultSet.getInt("order_id");
-            double total = resultSet.getDouble("total");
-            double shippingCost = resultSet.getDouble("shipping_cost");
-            double price = resultSet.getDouble("price");
-            double shippingPaid = resultSet.getDouble("shipping_paid");
-            double tax = resultSet.getDouble("tax");
-            Receipt receipt = new Receipt(receiptId, userId, orderId, total, shippingCost, price, shippingPaid, tax);
+    public List<Receipt> getReceiptsForUser(int userId) throws SQLException {
+    List<Receipt> receipts = new ArrayList<>();
+    String query = "SELECT * FROM receipts WHERE user_id = ?";
+    try (Connection conn = dbConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+        stmt.setInt(1, userId);
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            Receipt receipt = new Receipt(
+                rs.getInt("id"), 
+                rs.getInt("user_id"), 
+                rs.getInt("order_id"), 
+                rs.getDouble("total"), 
+                rs.getDouble("shipping_cost"), 
+                rs.getDouble("price"), 
+                rs.getDouble("shipping_paid"), 
+                rs.getDouble("tax")
+            );
             receipts.add(receipt);
         }
-        resultSet.close();
-        statement.close();
-        return receipts;
+    } catch(Exception e){
+        System.out.println("hi");
+        e.getStackTrace();
     }
+    return receipts;
+}
+
     
 
     // public void insertReceipt(User user, int orderId, double total, double shippingCost, double price, double shippingPaid, double tax, Connection connection) throws SQLException {
