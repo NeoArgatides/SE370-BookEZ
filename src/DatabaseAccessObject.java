@@ -10,7 +10,7 @@ import java.util.List;
  the users and receipts tables, respectively 
 *******************/
 public class DatabaseAccessObject implements dbAO_IF{
-    private static DatabaseAccessObject instance = null;
+    private static DatabaseAccessObject instance = null; //needs work
     private static Connection myConn = null;
 
     // static final String DB_URL = "jdbc:mysql://localhost:3306/bookez_db";

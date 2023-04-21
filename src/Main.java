@@ -12,46 +12,32 @@ public class Main {
 	private static String DB_URL;
     private static String USER;
     private static String PASS;
+
 	static ConfigurationLoader loader = new ConfigurationLoader(DB_URL, USER, PASS);
 
+	
     public static void main(String[] args) {
+
 		//create a connection tot the mySql database
 		try{
-			try {
-				Class.forName("com.mysql.cj.jdbc.Driver");
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				System.out.println("error");
-			}  
-			loader.loadConfiguration();  
-            Connection conn = DriverManager.getConnection(loader.getDBURL(), loader.getUser(), loader.getPass());
-            System.out.println("DB connection successful to: " + loader.getDBURL());
 			
-			//a DatabaseAccessObject instance using the connection 
-			DatabaseAccessObject userDatabaseAccessObject = new DatabaseAccessObject(conn);
+			// Get an instance of the UserDao
+			UserDAO userDao = UserDAO.getInstance();
+			// Get an instance of the DBConnection
+            DBConnection dbConnection = DBConnection.getInstance();
+            System.out.println("DB Connection successful.");
 
-			//TESTING !!!!
-			//// Retrieve a user from the database and print their username and password
-			// User user = userDatabaseAccessObject.getUserById(1);
-			// System.out.println("User " + user.getId() + ": " + user.getUsername() + ", " + user.getPassword());
-			// List<Receipt> receipts = user.getReceipts();
+			/********************************************* */
+			// Example login
+            String username = "testuser";
+            String password = "testpassword";
 
-			// // Iterate over the list of receipts and do something with them
-			// for (Receipt receipt : receipts) {
-			// 	System.out.println("Receipt ID: " + receipt.getId());
-			// 	System.out.println("User ID: " + receipt.getUserId());
-			// 	System.out.println("Order ID: " + receipt.getOrderNumber());
-			// 	System.out.println("Total: " + receipt.getTotal());
-			// 	System.out.println("Shipping Cost: " + receipt.getShippingCost());
-			// 	System.out.println("Price: " + receipt.getPrice());
-			// 	System.out.println("Shipping Paid: " + receipt.getShippingPaid());
-			// 	System.out.println("Tax: " + receipt.getTax());
-			// 	System.out.println();
-			// }
-
- 			// Close the database connection
-            conn.close();
+			User user = userDao.getUserByUsernameAndPassword(username, password);
+            if (user != null) {
+                System.out.println("User login successful.");
+            } else {
+                System.out.println("User login failed.");
+            }
 		}	catch(SQLException e) {
             System.err.println("Error: " + e.getMessage());
         }

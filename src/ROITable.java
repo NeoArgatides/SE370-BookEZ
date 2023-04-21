@@ -18,12 +18,16 @@ import java.awt.BorderLayout;
 import javax.swing.JButton;
 import javax.swing.JTable;
 
+import java.math.RoundingMode;  
+import java.text.DecimalFormat;
+
 public class ROITable extends JPanel implements dbAO_IF{
 	private static final long serialVersionUID = 1L;
 	private MainFrame mainFrame;
 	private JTable roiTable = new JTable();
 	private JLabel tableProfitLbl = new JLabel();
 	private double totalProfit = 0;
+	private static final DecimalFormat decfor = new DecimalFormat("0.00");
 	
 	ROITable(MainFrame mainFrame) {
 		setBackground(new Color(153, 204, 255));
@@ -121,7 +125,7 @@ public class ROITable extends JPanel implements dbAO_IF{
 			}
 		}
 		scanner.close();
-		tableProfitLbl.setText("Total profit: $" + String.valueOf(totalProfit) + "");
+		tableProfitLbl.setText("Total profit: $" + String.valueOf(decfor.format(totalProfit)) + "");
 		roiTable.setModel(model);
 	}
 }
