@@ -21,31 +21,30 @@ public class Main {
 		//create a connection tot the mySql database
 		try{
 			
-			// Get an instance of the UserDao
-			UserDAO userDao = UserDAO.getInstance();
-			// Get an instance of the DBConnection
-            DBConnection dbConnection = DBConnection.getInstance();
-            System.out.println("DB Connection successful.");
+			DBConnection dbConnection = DBConnection.getInstance();
+            Connection connection = dbConnection.getConnection();
+            UserDAO userDAO = new UserDAO(connection);
+            ReceiptDAO receiptDAO = new ReceiptDAO(connection);
 
 			/********************************************* */
 			// Example login
             String username = "testuser";
             String password = "testpassword";
 
-			User user = userDao.getUserByUsernameAndPassword(username, password);
-			int userId = user.getId();
-
-            if (user != null) {
-                System.out.println("User login successful.");
+			// sign in the user
+			User user = userDAO.signIn(username, password);
+			if (user != null) {
+                // get the receipts for the user
+                List<Receipt> receipts = receiptDAO.getReceiptsForUser(user);
+                
+                for (Receipt receipt : receipts) {
+                    // print out the receipt information
+                    System.out.println(receipt.getId() + ", " + receipt.getUserId() + ", " + receipt.getOrderNumber() + ", " + receipt.getTotal() + ", " + receipt.getShippingCost() + ", " + receipt.getPrice() + ", " + receipt.getShippingPaid() + ", " + receipt.getTax());
+                }
             } else {
-                System.out.println("User login failed.");
+                System.out.println("Invalid username or password");
             }
-			ReceiptDAO receiptDAO = ReceiptDAO.getInstance();
-
-			List<Receipt> receipts = receiptDAO.getReceiptsForUser(userId);
-			for (Receipt receipt : receipts) {
-				System.out.println(receipt);
-			}
+						
 		}	catch(SQLException e) {
             System.err.println("Error: " + e.getMessage());
         }

@@ -1,92 +1,39 @@
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class UserDAO {
 
-    
-    private DBConnection dbConnection;
-    
-    private static UserDAO instance;
-    
-    //singleton instance
-    private UserDAO() throws SQLException {
-        dbConnection = DBConnection.getInstance();
+    private Connection conn;
+
+    public UserDAO(Connection conn) {
+        this.conn = conn;
     }
 
-    //returns the singleton instance of the class
-    public static synchronized UserDAO getInstance() throws SQLException {
-        if (instance == null) {
-            instance = new UserDAO();
-        }
-        return instance;
-    }
-
-    // public User getUserByUsernameAndPassword(String username, String password) throws SQLException {
-    
-        
-    //     ResultSet rs = null;
-    //     User user = null;
-    //     String query = "SELECT * FROM users WHERE username = ? AND password = ?";
-
-    //     try(Connection conn = dbConnection.getConnection();PreparedStatement stmt = conn.prepareStatement(query)) {
-    //         stmt.setString(1, username);
-    //         stmt.setString(2, password);
-    //         rs = stmt.executeQuery();
-
-    //         if (rs.next()) {
-    //             user = new User(rs.getInt("id"), rs.getString("username"), rs.getString("password"));
-    //         }
-    //     } 
-    //     return user;
-
-    // }
-
-    public User getUserByUsernameAndPassword(String username, String password) throws SQLException {
+    public User signIn(String username, String password) throws SQLException {
+        PreparedStatement stmt = null;
         ResultSet rs = null;
         User user = null;
-        String query = "SELECT * FROM users WHERE username = ? AND password = ?";
-        
-        try (Connection conn = dbConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+        try {
+            stmt = conn.prepareStatement("SELECT * FROM users WHERE username=? AND password=?");
             stmt.setString(1, username);
             stmt.setString(2, password);
             rs = stmt.executeQuery();
-    
             if (rs.next()) {
-                user = new User(rs.getInt("id"), rs.getString("username"), rs.getString("password"));
+                int id = rs.getInt("id");
+                String name = rs.getString("username");
+                String pass = rs.getString("password");
+                user = new User(id, name, pass);
             }
-        } catch(Exception e){
-           System.out.println("bue");
-            e.printStackTrace();
-        }
-        finally {
-            // Close database resources
-            try{
-                if (rs != null){
-                    rs.close();
-                }
-            } catch(SQLException s){
-                s.printStackTrace();
+        } finally {
+            if (rs != null) {
+                rs.close();
             }
-            
-            // The PreparedStatement is automatically closed when the Connection is closed
+            if (stmt != null) {
+                stmt.close();
+            }
         }
         return user;
     }
-    // public User getUserByUsername(String username) throws SQLException {
-    //     String query = "SELECT * FROM users WHERE username = ?";
-    //     try (PreparedStatement statement = connection.prepareStatement(query)) {
-    //         statement.setString(1, username);
-    //         try (ResultSet resultSet = statement.executeQuery()) {
-    //             if (resultSet.next()) {
-    //                 int id = resultSet.getInt("id");
-    //                 String password = resultSet.getString("password");
-    //                 return new User(id, username, password);
-    //             } else {
-    //                 return null;
-    //             }
-    //         }
-    //     }
-    // }
-  
-
 }

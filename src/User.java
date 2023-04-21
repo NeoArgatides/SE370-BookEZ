@@ -1,7 +1,4 @@
-//user object 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class User {
     private int id;
