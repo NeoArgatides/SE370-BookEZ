@@ -18,9 +18,9 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
+import javax.swing.SwingConstants
 
-public class Login extends JPanel implements User_IF{
+public class Login extends JPanel implements dbAO_IF{
 	private static final long serialVersionUID = 1L;
 	private final JButton registerBtn = new JButton("Register");
 	private final JButton loginBtn = new JButton("Login");
@@ -94,7 +94,7 @@ public class Login extends JPanel implements User_IF{
 		errorLbl.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldPanel.add(errorLbl, gbc_errorLbl);
 		errorLbl.setForeground(new Color(178, 34, 34));
-		registerBtn.addActionListener(new ActionListener()
+		registerBtn.addActionListener(new ActionListener() // NeedsWork To register properly with new Database system
         {
         	public void actionPerformed(ActionEvent e)
         	{
