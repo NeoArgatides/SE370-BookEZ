@@ -18,7 +18,10 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants
+import javax.swing.SwingConstants;
+//
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class Login extends JPanel implements dbAO_IF{
 	private static final long serialVersionUID = 1L;
@@ -35,11 +38,22 @@ public class Login extends JPanel implements dbAO_IF{
 	private final JLabel usernameLbl = new JLabel("Username:");
 	private final JLabel passwordLbl = new JLabel("Password:");
 	private MainFrame mainFrame;
-	
-	
-	Login(MainFrame mainFrame) {
 
+	private Connection connection;
+	private UserDAO userDAO;
+	private User currentUser;
+
+	// public Login(Connection connection) {
+	// 	this.connection = connection;
+	// 	userDAO = new UserDAO(connection);
+	// }
+
+	Login(MainFrame mainFrame, UserDAO userDAO) {
+		//
+		// this.connection = conn; 
 		this.mainFrame = mainFrame;
+		this.userDAO = userDAO;
+
 		setLayout(new BorderLayout(0, 0));
 		setBackground(new Color(153, 204, 255));
 		textFieldPanel.setBackground(new Color(153, 204, 255));
@@ -122,26 +136,46 @@ public class Login extends JPanel implements dbAO_IF{
         	{
         		String username = usernameTextField.getText();
         		String password = passwordTextField.getText();
-        		Scanner sc = null;
-        		try {
-        			sc = new Scanner(mainFrame.getFile());
-        		} catch (FileNotFoundException e1) {
-        			e1.printStackTrace();
-        		}
+				System.out.println(username + " " + password);
+
+				// sign in the user
+				try {
+					currentUser = userDAO.signIn(username, password);
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				if (currentUser != null) {
+					// get the receipts for the user
+					System.out.println("signed in");
+					mainFrame.login(username);
+				} else {
+					System.out.println("Invalid username or password");
+				}
+						
+				
+
+				
+        		// Scanner sc = null;
+        		// try {
+        		// 	sc = new Scanner(mainFrame.getFile());
+        		// } catch (FileNotFoundException e1) {
+        		// 	e1.printStackTrace();
+        		// }
         		
-        		String line;
-        		int indexUsername;
-        		while(sc.hasNextLine()) {
-        			line = sc.nextLine();
-        			indexUsername = line.indexOf(",");
-        			if(line.substring(0, indexUsername).equals(username) && line.substring(indexUsername+1, line.indexOf(",", indexUsername+1)).equals(password)) {
-        				mainFrame.login(username);
-        				break;
-        			}
-        		}
-        		if(!sc.hasNextLine()) {
-        			errorLbl.setText("Invalid name/PWD");
-        		}
+        		// String line;
+        		// int indexUsername;
+        		// while(sc.hasNextLine()) {
+        		// 	line = sc.nextLine();
+        		// 	indexUsername = line.indexOf(",");
+        		// 	if(line.substring(0, indexUsername).equals(username) && line.substring(indexUsername+1, line.indexOf(",", indexUsername+1)).equals(password)) {
+        		// 		mainFrame.login(username);
+        		// 		break;
+        		// 	}
+        		// }
+        		// if(!sc.hasNextLine()) {
+        		// 	errorLbl.setText("Invalid name/PWD");
+        		// }
         		
         	}
         });
@@ -154,6 +188,7 @@ public class Login extends JPanel implements dbAO_IF{
 		usernameTextField.setText("");
 		passwordTextField.setText("");
 		errorLbl.setText("");
+		// System.out.println("hiiii");
 	}
 	
 	public boolean usernameTaken(String username) {

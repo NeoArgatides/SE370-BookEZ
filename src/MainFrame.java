@@ -4,13 +4,20 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.Color;
 import java.io.File;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class MainFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	File file = new File("accounts.txt");
 	String currentUser;
+	
 	private JPanel mainPanel = new JPanel();
-	private JPanel loginPanel = new Login(this);
+	Connection connection = null; // Create connection object
+	UserDAO userDAO;
+
+	private JPanel loginPanel;
+	// private JPanel loginPanel = new Login(this, connection);
 	private JPanel uploadPanel = new Upload(this);
 	private JPanel catalogPanel = new Catalog(this);
 	private JPanel ROIPanel = new ROITable(this);
@@ -19,6 +26,17 @@ public class MainFrame extends JFrame {
 	private ROIManager manager = new ROIManager(this);
 	
 	MainFrame() {
+        try {
+            connection = DBConnection.getInstance().getConnection();
+			userDAO = new UserDAO(connection);
+
+			//create login panel 
+			loginPanel = new Login(this,userDAO);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+		/////////
 		getContentPane().add(mainPanel);
 		mainPanel.setBackground(new Color(153, 204, 255));
 		mainPanel.setLayout(cl);
@@ -32,7 +50,7 @@ public class MainFrame extends JFrame {
 		
 		cl.show(mainPanel, "1");
 	}
-	
+
 	File getFile() {
 		return file;
 	}
