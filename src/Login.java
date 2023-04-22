@@ -18,7 +18,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
+import javax.swing.SwingConstants
 
 public class Login extends JPanel implements dbAO_IF{
 	private static final long serialVersionUID = 1L;
@@ -36,7 +36,9 @@ public class Login extends JPanel implements dbAO_IF{
 	private final JLabel passwordLbl = new JLabel("Password:");
 	private MainFrame mainFrame;
 	
+	
 	Login(MainFrame mainFrame) {
+
 		this.mainFrame = mainFrame;
 		setLayout(new BorderLayout(0, 0));
 		setBackground(new Color(153, 204, 255));
@@ -113,6 +115,7 @@ public class Login extends JPanel implements dbAO_IF{
         		}
         	}
         });
+		//verification
 		loginBtn.addActionListener(new ActionListener()
         {
         	public void actionPerformed(ActionEvent e)
@@ -147,13 +150,13 @@ public class Login extends JPanel implements dbAO_IF{
 		
 	}
 	
-	void login() {
+	public void login() {
 		usernameTextField.setText("");
 		passwordTextField.setText("");
 		errorLbl.setText("");
 	}
 	
-	boolean usernameTaken(String username) {
+	public boolean usernameTaken(String username) {
 		Scanner sc = null;
 		try {
 			sc = new Scanner(mainFrame.getFile());
