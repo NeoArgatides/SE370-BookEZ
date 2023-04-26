@@ -23,7 +23,11 @@ import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 
-public class ROITable extends JPanel implements dbAO_IF{
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+public class ROITable extends JPanel implements dbAO_IF {
 	private static final long serialVersionUID = 1L;
 	private MainFrame mainFrame;
 	private JTable roiTable = new JTable();
@@ -72,6 +76,17 @@ public class ROITable extends JPanel implements dbAO_IF{
         	}
         });
 
+		JButton sortBtn = new JButton("Sort");
+		tableBackPanel.add(sortBtn);
+		sortBtn.addActionListener(new ActionListener()
+        {
+        	public void actionPerformed(ActionEvent e)
+        	{
+        		sort(6);
+				System.out.print("jdsfbjdasfb");
+        	}
+        });
+
 		JPanel tableProfitPanel = new JPanel();
 		tableProfitPanel.setBackground(new Color(153, 204, 255));
 		add(tableProfitPanel, BorderLayout.SOUTH);
@@ -87,7 +102,7 @@ public class ROITable extends JPanel implements dbAO_IF{
 		tableProfitLbl.setFont(f.deriveFont(f.getStyle() | Font.BOLD, 15));
 		tableProfitPanel.add(tableProfitLbl);
 	}
-	
+
 	public void refreshTable() throws SQLException {
 		User loggedUser;
 
@@ -120,16 +135,67 @@ public class ROITable extends JPanel implements dbAO_IF{
 			}
 
 			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println("Number of rows in the model: " + model.getRowCount());
+			tableProfitLbl.setText("Total profit: $" + String.valueOf(decfor.format(totalProfit)) + "");
+			roiTable.setModel(model);
+		} else
+		{
+			System.out.println("other2");
 		}
-		System.out.println("Number of rows in the model: " + model.getRowCount());
-		tableProfitLbl.setText("Total profit: $" + String.valueOf(decfor.format(totalProfit)) + "");
-		roiTable.setModel(model);
-	}else
-	{
-	System.out.println("other2");
 	}
+
+	public void sort(int col){
+		SortingStrat_IF sortingStrat = null;
+
+		String colName = roiTable.getColumnName(col);
+
+		switch(colName) {
+			case "#":
+				sortingStrat = new BubbleSort();
+				break;
+			case "Order #":
+				sortingStrat = new QuickSort();
+				break;
+			case "Total":
+				sortingStrat = new QuickSort();
+				break;
+			case "Shipping Cost":
+				sortingStrat = new BubbleSort();
+				break;
+			case "Price":
+				sortingStrat = new QuickSort();
+				break;
+			case "Shipping Paid":
+				sortingStrat = new BubbleSort();
+				break;
+			case "Tax":
+				sortingStrat = new BubbleSort();
+		}
+
+		roiTable = sortingStrat.sort(roiTable, col);
 	}
+
+
+
+	public class TableHeaderMouseListener extends MouseAdapter {
+		
+		private JTable table;
+
+		public TableHeaderMouseListener() {
+			this.table = roiTable;
+			System.out.println("init");
+		}
+		
+		public void mouseClicked(MouseEvent event) {
+			Point point = event.getPoint();
+			int column = table.columnAtPoint(point);
+			sort(column);
+			System.out.println("click");
+		}
+	}
+
 }
