@@ -15,12 +15,16 @@ public class MainFrame extends JFrame {
 	private JPanel mainPanel = new JPanel();
 	Connection connection = null; // Create connection object
 	UserDAO userDAO;
+	ReceiptDAO receiptDAO;
+
 
 	private JPanel loginPanel;
 	// private JPanel loginPanel = new Login(this, connection);
 	private JPanel uploadPanel = new Upload(this);
 	private JPanel catalogPanel = new Catalog(this);
-	private JPanel ROIPanel = new ROITable(this);
+	// private JPanel ROIPanel = new ROITable(this);
+	private JPanel ROIPanel;
+
 	private JPanel menuPanel = new Menu(this);
 	private CardLayout cl = new CardLayout();
 	private ROIManager manager = new ROIManager(this);
@@ -29,9 +33,13 @@ public class MainFrame extends JFrame {
         try {
             connection = DBConnection.getInstance().getConnection();
 			userDAO = new UserDAO(connection);
+			receiptDAO = new ReceiptDAO(connection);
+
 
 			//create login panel 
 			loginPanel = new Login(this,userDAO);
+			ROIPanel = new ROITable(this, receiptDAO, userDAO);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -78,7 +86,12 @@ public class MainFrame extends JFrame {
 	}
 	
 	void goToTable() {
-		((ROITable) ROIPanel).refreshTable();
+		try {
+			((ROITable) ROIPanel).refreshTable();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		cl.show(mainPanel, "5");
 	}
 	

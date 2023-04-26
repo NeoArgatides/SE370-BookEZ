@@ -36,4 +36,31 @@ public class UserDAO {
         }
         return user;
     }
+
+    public User getUserByUsername(String username) throws SQLException {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        User user = null;
+        try {
+            stmt = conn.prepareStatement("SELECT * FROM users WHERE username=?");
+            stmt.setString(1, username);
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("username");
+                String pass = rs.getString("password");
+                user = new User(id, name, pass);
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+        return user;
+    }
+    
+    
 }
