@@ -53,7 +53,8 @@ public class Login extends JPanel implements dbAO_IF{
 		// this.connection = conn; 
 		this.mainFrame = mainFrame;
 		this.userDAO = userDAO;
-
+		this.loggedUser = mainFrame.loggedUser;
+		
 		setLayout(new BorderLayout(0, 0));
 		setBackground(new Color(153, 204, 255));
 		textFieldPanel.setBackground(new Color(153, 204, 255));
