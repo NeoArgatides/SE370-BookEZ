@@ -27,7 +27,7 @@ public class MainFrame extends JFrame {
 
 	private JPanel menuPanel = new Menu(this);
 	private CardLayout cl = new CardLayout();
-	private ROIManager manager = new ROIManager(this);
+	private ROIManager manager;
 	
 	MainFrame() {
         try {
@@ -39,6 +39,7 @@ public class MainFrame extends JFrame {
 			//create login panel 
 			loginPanel = new Login(this,userDAO);
 			ROIPanel = new ROITable(this, receiptDAO, userDAO);
+			manager = new ROIManager(this, receiptDAO, userDAO);
 
         } catch (SQLException e) {
             e.printStackTrace();

@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -17,9 +18,14 @@ import org.apache.pdfbox.text.PDFTextStripper;
 public class ROIManager {
 	private Integer nextEnd;
 	private MainFrame mainFrame;
-	
-	ROIManager(MainFrame mainFrame) {
+    ////DAO 
+	private ReceiptDAO receiptDAO;
+	private UserDAO userDAO;
+    ///
+	ROIManager(MainFrame mainFrame,ReceiptDAO receiptDAO, UserDAO userDAO) {
 		this.mainFrame = mainFrame;
+        this.receiptDAO = receiptDAO;
+		this.userDAO = userDAO;
 	}
 	
 	public void extractData(Upload uploadPage) {
@@ -80,11 +86,20 @@ public class ROIManager {
 
         //adding all collected information to output.text file
         try {
+            /************** */
+            User loggedUser;
+            loggedUser = userDAO.getUserByUsername(mainFrame.getUser());
+            System.out.println("Testing userid: " + loggedUser.getId());
+            //receiptDAO.addReceiptToDatabase(loggedUser, orderNum, total, shipCost, soldPrice, shipPaid, tax);
+            /*******************/
 			addInfoToDatabase(orderNum, total, shipCost, soldPrice, shipPaid, tax);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
     }//end of extractInfo
 	
@@ -118,6 +133,7 @@ public class ROIManager {
 
     }//end of profit calculation
 	
+    //add info in db 
 	private void addInfoToDatabase(String orderNum, String total, String shipCost, String soldPrice, String shipPaid, String tax) throws IOException {
 		File file = new File("accounts.txt");
 

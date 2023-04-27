@@ -25,9 +25,29 @@ public class ReceiptDAO {
             double price = rs.getDouble("price");
             double shippingPaid = rs.getDouble("shipping_paid");
             double tax = rs.getDouble("tax");
-            Receipt receipt = new Receipt(id, userId, orderId, total, shippingCost, price, shippingPaid, tax);
+            Receipt receipt = new Receipt(orderId, orderId, orderId, total, shippingCost, price, shippingPaid, tax);
             receipts.add(receipt);
         }
         return receipts;
     }
+
+    /////
+
+    public boolean addReceiptToDatabase(User user, String orderNum, String total, String shipCost, String soldPrice, String shipPaid, String tax) throws SQLException {
+        String query = "INSERT INTO Receipts (user_id, order_id, total, shipping_cost, price, shipping_paid, tax) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setInt(1, user.getId());
+        statement.setString(2, orderNum);
+        statement.setDouble(3, Double.parseDouble(total));
+        statement.setDouble(4, Double.parseDouble(shipCost));
+        statement.setDouble(5, Double.parseDouble(soldPrice));
+        statement.setDouble(6, Double.parseDouble(shipPaid));
+        statement.setDouble(7, Double.parseDouble(tax));
+        int result = statement.executeUpdate();
+        return result > 0;
+    }
+    
+    
+    
+
 }
