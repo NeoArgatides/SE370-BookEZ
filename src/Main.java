@@ -15,39 +15,38 @@ public class Main {
 
 	static ConfigurationLoader loader = new ConfigurationLoader(DB_URL, USER, PASS);*/
 
-	
     public static void main(String[] args) {
 
-		//create a connection tot the mySql database
-		try{
+		// //create a connection tot the mySql database
+		// try{
 			
-			DBConnection dbConnection = DBConnection.getInstance();
-            Connection connection = dbConnection.getConnection();
-            UserDAO userDAO = new UserDAO(connection);
-            ReceiptDAO receiptDAO = new ReceiptDAO(connection);
+		// 	// DBConnection dbConnection = DBConnection.getInstance();
+        //    	// Connection connection = dbConnection.getConnection();
+        //     // UserDAO userDAO = new UserDAO(connection);
+        //     // ReceiptDAO receiptDAO = new ReceiptDAO(connection);
 
-			/********************************************* */
-			// Example login
-            String username = "testuser";
-            String password = "testpassword";
+		// 	/********************************************* */
+		// 	// Example login
+        //     String username = "testuser";
+        //     String password = "testpassword";
 
-			// sign in the user
-			User user = userDAO.signIn(username, password);
-			if (user != null) {
-                // get the receipts for the user
-                List<Receipt> receipts = receiptDAO.getReceiptsForUser(user);
+		// 	// sign in the user
+		// 	User user = userDAO.signIn(username, password);
+		// 	if (user != null) {
+        //         // get the receipts for the user
+        //         List<Receipt> receipts = receiptDAO.getReceiptsForUser(user);
                 
-                for (Receipt receipt : receipts) {
-                    // print out the receipt information
-                    System.out.println(receipt.getId() + ", " + receipt.getUserId() + ", " + receipt.getOrderNumber() + ", " + receipt.getTotal() + ", " + receipt.getShippingCost() + ", " + receipt.getPrice() + ", " + receipt.getShippingPaid() + ", " + receipt.getTax());
-                }
-            } else {
-                System.out.println("Invalid username or password");
-            }
+        //         for (Receipt receipt : receipts) {
+        //             // print out the receipt information
+        //             System.out.println(receipt.getId() + ", " + receipt.getUserId() + ", " + receipt.getOrderNumber() + ", " + receipt.getTotal() + ", " + receipt.getShippingCost() + ", " + receipt.getPrice() + ", " + receipt.getShippingPaid() + ", " + receipt.getTax());
+        //         }
+        //     } else {
+        //         System.out.println("Invalid username or password");
+        //     }
 						
-		}	catch(SQLException e) {
-            System.err.println("Error: " + e.getMessage());
-        }
+		// }	catch(SQLException e) {
+        //     System.err.println("Error: " + e.getMessage());
+        // }
 
     	EventQueue.invokeLater(new Runnable()
 		{

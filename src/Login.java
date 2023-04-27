@@ -14,11 +14,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
+import java.util.Arrays;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants
+import javax.swing.JPasswordField;
+import javax.swing.SwingConstants;
+//
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class Login extends JPanel implements dbAO_IF{
 	private static final long serialVersionUID = 1L;
@@ -28,18 +34,30 @@ public class Login extends JPanel implements dbAO_IF{
 	private final JLabel loginLbl = new JLabel("Please enter username and password");
 	private final JPanel textFieldPanel = new JPanel();
 	private final JTextField usernameTextField = new JTextField();
-	private final JTextField passwordTextField = new JTextField();
+	
+	private final JPasswordField passwordTextField = new JPasswordField();
 	private final JPanel buttonPanel = new JPanel();
 	private final JPanel titlePanel = new JPanel();
 	private final JLabel errorLbl = new JLabel("");
 	private final JLabel usernameLbl = new JLabel("Username:");
 	private final JLabel passwordLbl = new JLabel("Password:");
 	private MainFrame mainFrame;
-	
-	
-	Login(MainFrame mainFrame) {
 
+	private Connection connection;
+	private UserDAO userDAO;
+	private User currentUser;
+
+	// public Login(Connection connection) {
+	// 	this.connection = connection;
+	// 	userDAO = new UserDAO(connection);
+	// }
+
+	Login(MainFrame mainFrame, UserDAO userDAO) {
+		//
+		// this.connection = conn; 
 		this.mainFrame = mainFrame;
+		this.userDAO = userDAO;
+
 		setLayout(new BorderLayout(0, 0));
 		setBackground(new Color(153, 204, 255));
 		textFieldPanel.setBackground(new Color(153, 204, 255));
@@ -73,7 +91,8 @@ public class Login extends JPanel implements dbAO_IF{
 		gbc_passwordTextField.gridx = 2;
 		gbc_passwordTextField.gridy = 1;
 		textFieldPanel.add(passwordTextField, gbc_passwordTextField);
-		passwordTextField.setUI(new HintTextFieldUI(" Password", true));
+		//
+		// passwordTextField.setUI(new HintTextFieldUI(" Password", true));
 		add(buttonPanel, BorderLayout.SOUTH);
 		buttonPanel.setLayout(new GridLayout(1, 0, 0, 0));
 		buttonPanel.add(registerBtn);
@@ -94,12 +113,16 @@ public class Login extends JPanel implements dbAO_IF{
 		errorLbl.setHorizontalAlignment(SwingConstants.RIGHT);
 		textFieldPanel.add(errorLbl, gbc_errorLbl);
 		errorLbl.setForeground(new Color(178, 34, 34));
+
+
+
 		registerBtn.addActionListener(new ActionListener() // NeedsWork To register properly with new Database system
         {
         	public void actionPerformed(ActionEvent e)
         	{
         		String username = usernameTextField.getText();
         		String password = passwordTextField.getText();
+
         		if(!username.equals("") && !password.equals("") && !usernameTaken(username)) {
         			BufferedWriter bf = null;
         			try {
@@ -116,32 +139,68 @@ public class Login extends JPanel implements dbAO_IF{
         	}
         });
 		//verification
+		// loginBtn.addActionListener(j -> {
+		// 	char[] p = passwordTextField.getPassword();
+		// 	String passwordString = new String(p);
+		// });
+		
 		loginBtn.addActionListener(new ActionListener()
         {
+
         	public void actionPerformed(ActionEvent e)
         	{
         		String username = usernameTextField.getText();
-        		String password = passwordTextField.getText();
-        		Scanner sc = null;
-        		try {
-        			sc = new Scanner(mainFrame.getFile());
-        		} catch (FileNotFoundException e1) {
-        			e1.printStackTrace();
-        		}
+        		// String password = passwordTextField.getText();
+				 char[] passwordChars = passwordTextField.getPassword();
+
+				 //String password = passwordTextField.getPassword();
+				String password = new String(passwordChars);
+
+				//Arrays.fill(input, '*');
+				//passwordTextField.fill(input, '0');
+				//for(int i = 0; i <= 20; i++){
+					//String password = new String(input);
+				 
+				System.out.println(username + " " + password);
+
+				// sign in the user
+				try {
+					currentUser = userDAO.signIn(username, password);
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				if (currentUser != null) {
+					// get the receipts for the user
+					System.out.println("signed in");
+					mainFrame.login(username);
+				} else {
+					System.out.println("Invalid username or password");
+				}
+						
+				
+
+				
+        		// Scanner sc = null;
+        		// try {
+        		// 	sc = new Scanner(mainFrame.getFile());
+        		// } catch (FileNotFoundException e1) {
+        		// 	e1.printStackTrace();
+        		// }
         		
-        		String line;
-        		int indexUsername;
-        		while(sc.hasNextLine()) {
-        			line = sc.nextLine();
-        			indexUsername = line.indexOf(",");
-        			if(line.substring(0, indexUsername).equals(username) && line.substring(indexUsername+1, line.indexOf(",", indexUsername+1)).equals(password)) {
-        				mainFrame.login(username);
-        				break;
-        			}
-        		}
-        		if(!sc.hasNextLine()) {
-        			errorLbl.setText("Invalid name/PWD");
-        		}
+        		// String line;
+        		// int indexUsername;
+        		// while(sc.hasNextLine()) {
+        		// 	line = sc.nextLine();
+        		// 	indexUsername = line.indexOf(",");
+        		// 	if(line.substring(0, indexUsername).equals(username) && line.substring(indexUsername+1, line.indexOf(",", indexUsername+1)).equals(password)) {
+        		// 		mainFrame.login(username);
+        		// 		break;
+        		// 	}
+        		// }
+        		// if(!sc.hasNextLine()) {
+        		// 	errorLbl.setText("Invalid name/PWD");
+        		// }
         		
         	}
         });
@@ -154,6 +213,7 @@ public class Login extends JPanel implements dbAO_IF{
 		usernameTextField.setText("");
 		passwordTextField.setText("");
 		errorLbl.setText("");
+		// System.out.println("hiiii");
 	}
 	
 	public boolean usernameTaken(String username) {
