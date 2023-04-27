@@ -84,22 +84,31 @@ public class ROIManager {
         shipPaid = convertAndFind(s, "$", nextEnd, 0);
         tax = convertAndFind(s, "$",nextEnd, 0);
 
-        //adding all collected information to output.text file
-        try {
-            /************** */
-            User loggedUser;
-            loggedUser = userDAO.getUserByUsername(mainFrame.getUser());
-            System.out.println("Testing userid: " + loggedUser.getId());
-            //receiptDAO.addReceiptToDatabase(loggedUser, orderNum, total, shipCost, soldPrice, shipPaid, tax);
-            /*******************/
+
+
+         //adding all collected information to output.text file
+         try {
 			addInfoToDatabase(orderNum, total, shipCost, soldPrice, shipPaid, tax);
-		} catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        //adding all collected information to output.text file
+        // try {
+        //     /************** */
+        //     User loggedUser;
+        //     loggedUser = userDAO.getUserByUsername(mainFrame.getUser());
+        //     System.out.println("Testing userid: " + loggedUser.getId());
+        //     //receiptDAO.addReceiptToDatabase(loggedUser, orderNum, total, shipCost, soldPrice, shipPaid, tax);
+        //     /*******************/
+		// 	addInfoToDatabase(orderNum, total, shipCost, soldPrice, shipPaid, tax);
+		// } catch (SQLException e) {
+        //     // TODO Auto-generated catch block
+        //     e.printStackTrace();
+        // } catch (IOException e) {
+        //     // TODO Auto-generated catch block
+        //     e.printStackTrace();
+        // }
 
     }//end of extractInfo
 	
@@ -135,7 +144,9 @@ public class ROIManager {
 	
     //add info in db 
 	private void addInfoToDatabase(String orderNum, String total, String shipCost, String soldPrice, String shipPaid, String tax) throws IOException {
-		File file = new File("accounts.txt");
+		
+        System.out.println(orderNum+" | "+ total+ " | "+shipCost+ " | "+soldPrice+" | "+ shipPaid+ " | "+tax);
+        File file = new File("accounts.txt");
 
 		try {
 		    Scanner scanner = new Scanner(file);
