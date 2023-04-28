@@ -99,6 +99,7 @@ public class ROIManager {
         try {
             loggedUser = userDAO.getUserByUsername(mainFrame.getUser());
             System.out.println("Testing userid: " + loggedUser.getId());
+            receiptDAO.addReceiptToDatabase(loggedUser, orderNum, total, shipCost, soldPrice, shipPaid, tax);
 
         } catch (SQLException e) {
             // TODO Auto-generated catch block

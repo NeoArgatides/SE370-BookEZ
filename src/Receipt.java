@@ -2,7 +2,7 @@ public class Receipt {
 
     private int id;
     private int userId;
-    private int orderId;
+    private String orderId;
 
     private double total;
     private double shippingCost;
@@ -10,7 +10,7 @@ public class Receipt {
     private double shippingPaid;
     private double tax;
 
-    public Receipt(int id,int userId, int orderId, double total, double shippingCost, double price, double shippingPaid, double tax) {
+    public Receipt(int id,int userId, String orderId, double total, double shippingCost, double price, double shippingPaid, double tax) {
         this.id = id;
         this.userId = userId;
         this.orderId = orderId;
@@ -37,11 +37,11 @@ public class Receipt {
         this.userId = u;
     }
 
-    public int getOrderNumber() {
+    public String getOrderNumber() {
         return orderId;
     }
 
-    public void setOrderId(int i){
+    public void setOrderId(String i){
         this.orderId = i;
     }
 
