@@ -101,7 +101,10 @@ public class ROITable extends JPanel implements dbAO_IF {
 		tableProfitLbl.setHorizontalAlignment(SwingConstants.CENTER);
 		tableProfitLbl.setFont(f.deriveFont(f.getStyle() | Font.BOLD, 15));
 		tableProfitPanel.add(tableProfitLbl);
+		JTableHeader header = roiTable.getTableHeader();
+        header.addMouseListener(new TableHeaderMouseListener());
 	}
+
 
 	public void refreshTable() throws SQLException {
 		User loggedUser;
@@ -149,35 +152,23 @@ public class ROITable extends JPanel implements dbAO_IF {
 	}
 
 	public void sort(int col){
-		SortingStrat_IF sortingStrat = null;
+        SortingStrat_IF sortingStrat = new BubbleSort(); //bubble sort by default
 
-		String colName = roiTable.getColumnName(col);
+        String colName = roiTable.getColumnName(col);
 
-		switch(colName) {
-			case "#":
-				sortingStrat = new BubbleSort();
-				break;
-			case "Order #":
-				sortingStrat = new QuickSort();
-				break;
-			case "Total":
-				sortingStrat = new QuickSort();
-				break;
-			case "Shipping Cost":
-				sortingStrat = new BubbleSort();
-				break;
-			case "Price":
-				sortingStrat = new QuickSort();
-				break;
-			case "Shipping Paid":
-				sortingStrat = new BubbleSort();
-				break;
-			case "Tax":
-				sortingStrat = new BubbleSort();
-		}
+        switch(colName) { //quicksort if one of these
+            case "Order #":
+                sortingStrat = new QuickSort();
+                break;
+            case "Total":
+                sortingStrat = new QuickSort();
+                break;
+            case "Price":
+                sortingStrat = new QuickSort();
+        }
 
-		roiTable = sortingStrat.sort(roiTable, col);
-	}
+        roiTable = sortingStrat.sort(roiTable, col);
+    }
 
 
 

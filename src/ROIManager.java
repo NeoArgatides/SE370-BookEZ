@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -78,28 +79,31 @@ public class ROIManager {
         //collecting each string segment from the files 
         orderNum = convertAndFind(s, "Order number ", nextEnd, 13);
         System.out.println("orderNum: "+orderNum);
-        total = convertAndFind(s, "$", nextEnd, 0);
+        total = convertAndFind(s, "$", nextEnd, 1);
         System.out.println("total: "+total);
-        shipCost = convertAndFind(s, "$", nextEnd, 0);
+        shipCost = convertAndFind(s, "$", nextEnd, 1);
         System.out.println("shipCost: "+shipCost);
-        soldPrice = convertAndFind(s, "$", nextEnd, 0);
+        soldPrice = convertAndFind(s, "$", nextEnd, 1);
         System.out.println("soldPrice: "+soldPrice);
-        shipPaid = convertAndFind(s, "$", nextEnd, 0);
+        shipPaid = convertAndFind(s, "$", nextEnd, 1);
         System.out.println("shipPaid: "+shipPaid);
         tax = "0";
         System.out.println("tax: "+tax);
 
         System.out.println("TESTING");
-        System.out.println("information: "+ orderNum + " " + total + " " + shipCost + " " + soldPrice + " " + shipPaid + " " + tax);
+        // System.out.println("information: "+ orderNum + " " + total + " " + shipCost + " " + soldPrice + " " + shipPaid + " " + tax);
         //adding all collected information to output.text file
-        try {
 
-            System.out.println("information: "+ orderNum + " " + total + " " + shipCost + " " + soldPrice + " " + shipPaid + " " + tax);
-			addInfoToDatabase(orderNum, total, shipCost, soldPrice, shipPaid, tax);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        /************** */
+        User loggedUser;
+        try {
+            loggedUser = userDAO.getUserByUsername(mainFrame.getUser());
+            System.out.println("Testing userid: " + loggedUser.getId());
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         System.out.println("*******----END of outputWriter()----*****");
 
     }//end of extractInfo
@@ -135,7 +139,18 @@ public class ROIManager {
     }//end of profit calculation
 	
 	private void addInfoToDatabase(String orderNum, String total, String shipCost, String soldPrice, String shipPaid, String tax) throws IOException {
-		File file = new File("accounts.txt");
+        System.out.println("IN addToDatabase()");
+        System.out.println("orderNum: "+orderNum);
+        System.out.println("total: "+total);
+        System.out.println("shipCost: "+shipCost);
+        System.out.println("soldPrice: "+soldPrice);
+        System.out.println("shipPaid: "+shipPaid);
+        System.out.println("tax: "+tax);
+
+
+        System.out.println("information: "+ orderNum + " " + total + " " + shipCost + " " + soldPrice + " " + shipPaid + " " + tax);
+
+        File file = new File("accounts.txt");
 
 		try {
 		    Scanner scanner = new Scanner(file);
