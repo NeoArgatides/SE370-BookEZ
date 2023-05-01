@@ -10,13 +10,17 @@ import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.io.FileReader;
+import java.sql.SQLException;
 
 public class Menu extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private MainFrame mainFrame;
+	private User loggedUser = null;
 	
 	Menu(MainFrame mainFrame) {
 		this.mainFrame = mainFrame;
+		this.loggedUser = mainFrame.getUser();
+		
 		setBackground(new Color(153, 204, 255));
 		setLayout(new BorderLayout(0, 0));
 		
@@ -68,7 +72,12 @@ public class Menu extends JPanel {
         {
         	public void actionPerformed(ActionEvent e)
         	{
-        		mainFrame.goToTable();
+        		try {
+					mainFrame.goToTable();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
         	}
         });
 		
