@@ -3,7 +3,7 @@ import javax.swing.JTable;
 public class QuickSort implements SortingStrat_IF{
     
     public JTable sort(JTable table, int column){
-        table = quickSort(table, 0, table.getRowCount(), column);
+        table = quickSort(table, 0, table.getRowCount()-1, column);
 
         return table;
     }

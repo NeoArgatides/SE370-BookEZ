@@ -37,6 +37,7 @@ public class ROITable extends JPanel implements dbAO_IF {
 	
 	private ReceiptDAO receiptDAO;
 	private UserDAO userDAO;
+
 	ROITable(MainFrame mainFrame, ReceiptDAO receiptDAO, UserDAO userDAO) throws SQLException {
 
 
@@ -158,13 +159,13 @@ public class ROITable extends JPanel implements dbAO_IF {
 
         switch(colName) { //quicksort if one of these
             case "Order #":
-                sortingStrat = new QuickSort();
+                sortingStrat = new InsertionSort();
                 break;
             case "Total":
-                sortingStrat = new QuickSort();
+                sortingStrat = new InsertionSort();
                 break;
             case "Price":
-                sortingStrat = new QuickSort();
+                sortingStrat = new InsertionSort();
         }
 
         roiTable = sortingStrat.sort(roiTable, col);
