@@ -11,22 +11,19 @@ public class MainFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	File file = new File("accounts.txt");
 	String currentUser;
-	User loggedUser = null;
 	
 	private JPanel mainPanel = new JPanel();
 	Connection connection = null; // Create connection object
 	UserDAO userDAO;
-  ReceiptDAO receiptDAO;
+	ReceiptDAO receiptDAO;
 
 
 	private JPanel loginPanel;
 	// private JPanel loginPanel = new Login(this, connection);
 	private JPanel uploadPanel = new Upload(this);
 	private JPanel catalogPanel = new Catalog(this);
-
 	// private JPanel ROIPanel = new ROITable(this);
 	private JPanel ROIPanel;
-
 
 	private JPanel menuPanel = new Menu(this);
 	private CardLayout cl = new CardLayout();
@@ -45,12 +42,10 @@ public class MainFrame extends JFrame {
 			manager = new ROIManager(this, receiptDAO, userDAO);
 
         } catch (SQLException e) {
-
             e.printStackTrace();
         }
 
 		/////////
-		
 		getContentPane().add(mainPanel);
 		mainPanel.setBackground(new Color(153, 204, 255));
 		mainPanel.setLayout(cl);
@@ -58,7 +53,6 @@ public class MainFrame extends JFrame {
 		mainPanel.add(menuPanel, "2");
 		mainPanel.add(uploadPanel, "3");
 		mainPanel.add(catalogPanel, "4");
-		ROIPanel = new ROITable(this,receiptDAO);
 		mainPanel.add(ROIPanel, "5");
 		//((ROITable) ROIPanel).refreshTable();
 		mainPanel.setVisible(true);
@@ -70,12 +64,10 @@ public class MainFrame extends JFrame {
 		return file;
 	}
 	
-	void login(User user) {
-		
-		this.loggedUser = user;
-		System.out.println(loggedUser.getUsername());
-		((Login) loginPanel).login();
+	void login(String username) {
 		cl.show(mainPanel, "2");
+		currentUser = username;
+		((Login) loginPanel).login();
 	}
 	
 	void goToLogin() {
@@ -94,7 +86,6 @@ public class MainFrame extends JFrame {
 		cl.show(mainPanel, "4");
 	}
 	
-
 	void goToTable() {
 		try {
 			((ROITable) ROIPanel).refreshTable();
@@ -103,11 +94,10 @@ public class MainFrame extends JFrame {
 			e.printStackTrace();
 		}
 		cl.show(mainPanel, "5");
-
 	}
 	
-	User getUser() {
-		return loggedUser;
+	String getUser() {
+		return currentUser;
 	}
 	
 	ROIManager getManager() {

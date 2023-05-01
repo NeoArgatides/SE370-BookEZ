@@ -43,9 +43,9 @@ public class Login extends JPanel implements dbAO_IF{
 	private final JLabel passwordLbl = new JLabel("Password:");
 	private MainFrame mainFrame;
 
-	// private Connection connection;
+	private Connection connection;
 	private UserDAO userDAO;
-	private User loggedUser;
+	private User currentUser;
 
 	// public Login(Connection connection) {
 	// 	this.connection = connection;
@@ -57,8 +57,7 @@ public class Login extends JPanel implements dbAO_IF{
 		// this.connection = conn; 
 		this.mainFrame = mainFrame;
 		this.userDAO = userDAO;
-		this.loggedUser = mainFrame.loggedUser;
-		
+
 		setLayout(new BorderLayout(0, 0));
 		setBackground(new Color(153, 204, 255));
 		textFieldPanel.setBackground(new Color(153, 204, 255));
@@ -133,7 +132,7 @@ public class Login extends JPanel implements dbAO_IF{
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
-        			mainFrame.login(loggedUser);
+        			mainFrame.login(username);
         		} else {
         			errorLbl.setText("Invalid name/PWD");
         		}
@@ -166,15 +165,15 @@ public class Login extends JPanel implements dbAO_IF{
 
 				// sign in the user
 				try {
-					loggedUser = userDAO.signIn(username, password);
+					currentUser = userDAO.signIn(username, password);
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				if (loggedUser != null) {
+				if (currentUser != null) {
 					// get the receipts for the user
 					System.out.println("signed in");
-					mainFrame.login(loggedUser);
+					mainFrame.login(username);
 				} else {
 					System.out.println("Invalid username or password");
 				}
@@ -209,8 +208,6 @@ public class Login extends JPanel implements dbAO_IF{
 		
 		
 	}
-
-
 	
 	public void login() {
 		usernameTextField.setText("");

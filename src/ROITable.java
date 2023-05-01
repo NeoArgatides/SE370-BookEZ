@@ -22,8 +22,6 @@ import javax.swing.JTable;
 import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
@@ -40,6 +38,7 @@ public class ROITable extends JPanel implements dbAO_IF {
 	private ReceiptDAO receiptDAO;
 	private UserDAO userDAO;
 	ROITable(MainFrame mainFrame, ReceiptDAO receiptDAO, UserDAO userDAO) throws SQLException {
+
 
 		setBackground(new Color(153, 204, 255));
 		this.mainFrame = mainFrame;
@@ -93,11 +92,8 @@ public class ROITable extends JPanel implements dbAO_IF {
 		add(tableProfitPanel, BorderLayout.SOUTH);
 		tableProfitPanel.setLayout(new BorderLayout(0, 0));
 
-	
-		if(loggedUser!=null){
-			refreshTable();
-		}
-		
+		//add table
+		refreshTable();
 	    JScrollPane scrollPane = new JScrollPane(roiTable);
 		add(scrollPane, BorderLayout.CENTER);
 
@@ -114,7 +110,6 @@ public class ROITable extends JPanel implements dbAO_IF {
 		User loggedUser;
 
 		loggedUser = userDAO.getUserByUsername(mainFrame.getUser());
-
 		totalProfit = 0;
 		String[] columnNames = new String[] {"#", "Order #", "Total", "Shipping Cost", "Price", "Shipping Paid", "Tax"};
 		DefaultTableModel model = new DefaultTableModel(0,0);
@@ -195,4 +190,3 @@ public class ROITable extends JPanel implements dbAO_IF {
 	}
 
 }
-
