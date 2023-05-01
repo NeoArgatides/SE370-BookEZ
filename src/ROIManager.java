@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -17,9 +18,14 @@ import org.apache.pdfbox.text.PDFTextStripper;
 public class ROIManager {
 	private Integer nextEnd;
 	private MainFrame mainFrame;
-	
-	ROIManager(MainFrame mainFrame) {
+	////DAO 
+	private ReceiptDAO receiptDAO;
+	private UserDAO userDAO;
+    ///
+	ROIManager(MainFrame mainFrame,ReceiptDAO receiptDAO, UserDAO userDAO) {
 		this.mainFrame = mainFrame;
+        this.receiptDAO = receiptDAO;
+		this.userDAO = userDAO;
 	}
 	
 	public void extractData(Upload uploadPage) {
@@ -64,27 +70,42 @@ public class ROIManager {
 	//used to extract the desired information from an ebay order reciept pdf and add new info to output.text file
     //boolean used to determine wether the extracted information should be stored in the vector
     protected void outputWriter(String s){
-
+        System.out.println("*******----START of outputWriter()----*****");
         //strings to collect information
         String orderNum, total, shipCost, soldPrice, shipPaid, tax, profitC;
-  
+        
         nextEnd = 0;//setting int to 0 for each new file being read 
 
         //collecting each string segment from the files 
         orderNum = convertAndFind(s, "Order number ", nextEnd, 13);
-        total = convertAndFind(s, "$", nextEnd, 0);
-        shipCost = convertAndFind(s, "Cost: ", nextEnd, 6);
-        soldPrice = convertAndFind(s, "$", nextEnd, 0);
-        shipPaid = convertAndFind(s, "$", nextEnd, 0);
-        tax = convertAndFind(s, "$",nextEnd, 0);
+        System.out.println("orderNum: "+orderNum);
+        total = convertAndFind(s, "$", nextEnd, 1);
+        System.out.println("total: "+total);
+        shipCost = convertAndFind(s, "$", nextEnd, 1);
+        System.out.println("shipCost: "+shipCost);
+        soldPrice = convertAndFind(s, "$", nextEnd, 1);
+        System.out.println("soldPrice: "+soldPrice);
+        shipPaid = convertAndFind(s, "$", nextEnd, 1);
+        System.out.println("shipPaid: "+shipPaid);
+        tax = "0";
+        System.out.println("tax: "+tax);
 
+        System.out.println("TESTING");
+        // System.out.println("information: "+ orderNum + " " + total + " " + shipCost + " " + soldPrice + " " + shipPaid + " " + tax);
         //adding all collected information to output.text file
+
+        /************** */
+        User loggedUser;
         try {
-			addInfoToDatabase(orderNum, total, shipCost, soldPrice, shipPaid, tax);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+            loggedUser = userDAO.getUserByUsername(mainFrame.getUser());
+            System.out.println("Testing userid: " + loggedUser.getId());
+            receiptDAO.addReceiptToDatabase(loggedUser, orderNum, total, shipCost, soldPrice, shipPaid, tax);
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        System.out.println("*******----END of outputWriter()----*****");
 
     }//end of extractInfo
 	
@@ -119,7 +140,18 @@ public class ROIManager {
     }//end of profit calculation
 	
 	private void addInfoToDatabase(String orderNum, String total, String shipCost, String soldPrice, String shipPaid, String tax) throws IOException {
-		File file = new File("accounts.txt");
+        System.out.println("IN addToDatabase()");
+        System.out.println("orderNum: "+orderNum);
+        System.out.println("total: "+total);
+        System.out.println("shipCost: "+shipCost);
+        System.out.println("soldPrice: "+soldPrice);
+        System.out.println("shipPaid: "+shipPaid);
+        System.out.println("tax: "+tax);
+
+
+        System.out.println("information: "+ orderNum + " " + total + " " + shipCost + " " + soldPrice + " " + shipPaid + " " + tax);
+
+        File file = new File("accounts.txt");
 
 		try {
 		    Scanner scanner = new Scanner(file);

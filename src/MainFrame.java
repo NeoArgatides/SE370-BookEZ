@@ -16,17 +16,21 @@ public class MainFrame extends JFrame {
 	private JPanel mainPanel = new JPanel();
 	Connection connection = null; // Create connection object
 	UserDAO userDAO;
-	ReceiptDAO	receiptDAO;
+  ReceiptDAO receiptDAO;
+
 
 	private JPanel loginPanel;
 	// private JPanel loginPanel = new Login(this, connection);
 	private JPanel uploadPanel = new Upload(this);
 	private JPanel catalogPanel = new Catalog(this);
-	// private JPanel ROIPanel = new ROITable(this,loggedUser);
+
+	// private JPanel ROIPanel = new ROITable(this);
 	private JPanel ROIPanel;
+
+
 	private JPanel menuPanel = new Menu(this);
 	private CardLayout cl = new CardLayout();
-	private ROIManager manager = new ROIManager(this);
+	private ROIManager manager;
 	
 	MainFrame() {
         try {
@@ -34,10 +38,14 @@ public class MainFrame extends JFrame {
 			userDAO = new UserDAO(connection);
 			receiptDAO = new ReceiptDAO(connection);
 
+
 			//create login panel 
 			loginPanel = new Login(this,userDAO);
+			ROIPanel = new ROITable(this, receiptDAO, userDAO);
+			manager = new ROIManager(this, receiptDAO, userDAO);
 
-		} catch (SQLException e) {
+        } catch (SQLException e) {
+
             e.printStackTrace();
         }
 
@@ -86,16 +94,16 @@ public class MainFrame extends JFrame {
 		cl.show(mainPanel, "4");
 	}
 	
-	void goToTable() throws SQLException {
-		
-		if(loggedUser != null){
-			ROIPanel = new ROITable(this, receiptDAO);
-			((ROITable) ROIPanel).refreshTable();
-			cl.show(mainPanel, "5");
 
+	void goToTable() {
+		try {
+			((ROITable) ROIPanel).refreshTable();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		System.out.println("not logged in");
-		
+		cl.show(mainPanel, "5");
+
 	}
 	
 	User getUser() {

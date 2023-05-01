@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.List;
 import java.util.Scanner;
 
 import javax.swing.JLabel;
@@ -24,7 +25,11 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ROITable extends JPanel{
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+public class ROITable extends JPanel implements dbAO_IF {
 	private static final long serialVersionUID = 1L;
 	private MainFrame mainFrame;
 	private JTable roiTable = new JTable();
@@ -32,17 +37,14 @@ public class ROITable extends JPanel{
 	private double totalProfit = 0;
 	private static final DecimalFormat decfor = new DecimalFormat("0.00");
 	
-	private User loggedUser = null;
 	private ReceiptDAO receiptDAO;
+	private UserDAO userDAO;
+	ROITable(MainFrame mainFrame, ReceiptDAO receiptDAO, UserDAO userDAO) throws SQLException {
 
-	ROITable(MainFrame mainFrame, ReceiptDAO receiptDAO ) {
-
-		this.loggedUser = mainFrame.getUser();
-		this.receiptDAO = receiptDAO;
-
-		
 		setBackground(new Color(153, 204, 255));
 		this.mainFrame = mainFrame;
+		this.receiptDAO = receiptDAO;
+		this.userDAO = userDAO;
 		setLayout(new BorderLayout(0, 0));
 
 		roiTable.setFillsViewportHeight(true);
@@ -75,6 +77,17 @@ public class ROITable extends JPanel{
         	}
         });
 
+		JButton sortBtn = new JButton("Sort");
+		tableBackPanel.add(sortBtn);
+		sortBtn.addActionListener(new ActionListener()
+        {
+        	public void actionPerformed(ActionEvent e)
+        	{
+        		sort(6);
+				System.out.print("jdsfbjdasfb");
+        	}
+        });
+
 		JPanel tableProfitPanel = new JPanel();
 		tableProfitPanel.setBackground(new Color(153, 204, 255));
 		add(tableProfitPanel, BorderLayout.SOUTH);
@@ -92,115 +105,94 @@ public class ROITable extends JPanel{
 		tableProfitLbl.setHorizontalAlignment(SwingConstants.CENTER);
 		tableProfitLbl.setFont(f.deriveFont(f.getStyle() | Font.BOLD, 15));
 		tableProfitPanel.add(tableProfitLbl);
+		JTableHeader header = roiTable.getTableHeader();
+        header.addMouseListener(new TableHeaderMouseListener());
 	}
-	//
-	public void refreshTable() {
+
+
+	public void refreshTable() throws SQLException {
+		User loggedUser;
+
+		loggedUser = userDAO.getUserByUsername(mainFrame.getUser());
+
 		totalProfit = 0;
 		String[] columnNames = new String[] {"#", "Order #", "Total", "Shipping Cost", "Price", "Shipping Paid", "Tax"};
-		DefaultTableModel model = new DefaultTableModel(0, 0);
+		DefaultTableModel model = new DefaultTableModel(0,0);
 		model.setColumnIdentifiers(columnNames);
-		int i = 1;
+		
+		if(loggedUser!=null )
+		{
+		 System.out.println("refreshed/loggeduser");
+		 totalProfit = 0;
+		 int i = 1;
+		 try {
+			List<Receipt> receipts = receiptDAO.getReceiptsForUser(loggedUser);
+			for (Receipt receipt : receipts) {
+				String orderNum = String.valueOf(receipt.getId());
+				String total = String.valueOf(receipt.getTotal());
+				String shipCost = String.valueOf(receipt.getShippingPaid());
+				String soldPrice = String.valueOf(receipt.getPrice());
+				String shipPaid = String.valueOf(receipt.getShippingPaid());
+				String tax = String.valueOf(receipt.getTax());
+				// modify this to add on the database
+				model.addRow(new Object[] {String.valueOf(i), orderNum, total, shipCost, soldPrice, shipPaid, tax});
+				System.out.println(i+ " "+ receipt.getOrderNumber() + ", " + receipt.getTotal() + ", " + receipt.getShippingCost() + ", " + receipt.getPrice() + ", " + receipt.getShippingPaid() + ", " + receipt.getTax());
 
-					
-		//modify this to add on the database
-		model.addRow(new Object[]{"1", "1234", "$50.00", "$5.00", "$45.00", "$2.00", "$3.00"});
-		i++;
-		model.addRow(new Object[]{"2", "5678", "$100.00", "$10.00", "$90.00", "$5.00", "$5.00"});
-		totalProfit += mainFrame.getManager().profitCalc("100", "200", "122");
-	
-
-		tableProfitLbl.setText("Total profit: $" + String.valueOf(decfor.format(totalProfit)) + "");
-		roiTable.setModel(model);
-		}
-	}
-	// 	String[] columnNames = new String[] {"#", "Order #", "Total", "Shipping Cost", "Price", "Shipping Paid", "Tax"};
-	// 	DefaultTableModel model = new DefaultTableModel(0,0);
-	// 	model.setColumnIdentifiers(columnNames);
-
-	// 	if(loggedUser!=null )
-	// 	{
-	// 	 System.out.println("refreshedw/loggeduser");
-	// 	 totalProfit = 0;
-	// 	 int i = 1;
-	// 	 try {
-	// 		List<Receipt> receipts = receiptDAO.getReceiptsForUser(loggedUser);
-	// 		for (Receipt receipt : receipts) {
-	// 			String orderNum = String.valueOf(receipt.getId());
-	// 			String total = String.valueOf(receipt.getTotal());
-	// 			String shipCost = String.valueOf(receipt.getShippingPaid());
-	// 			String soldPrice = String.valueOf(receipt.getPrice());
-	// 			String shipPaid = String.valueOf(receipt.getShippingPaid());
-	// 			String tax = String.valueOf(receipt.getTax());
-	// 			// modify this to add on the database
-	// 			model.addRow(new Object[] {String.valueOf(i), orderNum, total, shipCost, soldPrice, shipPaid, tax});
-	// 			System.out.println(i+ " "+ receipt.getOrderNumber() + ", " + receipt.getTotal() + ", " + receipt.getShippingCost() + ", " + receipt.getPrice() + ", " + receipt.getShippingPaid() + ", " + receipt.getTax());
-
-	// 			totalProfit += mainFrame.getManager().profitCalc(total, shipCost, tax);
-	// 			i++;
-	// 		}
+				totalProfit += mainFrame.getManager().profitCalc(total, shipCost, tax);
+				i++;
+			}
 
 			
-	// 	} catch (SQLException e) {
-	// 		// TODO Auto-generated catch block
-	// 		e.printStackTrace();
-	// 	}
-	// 	System.out.println("Number of rows in the model: " + model.getRowCount());
-	// 	tableProfitLbl.setText("Total profit: $" + String.valueOf(decfor.format(totalProfit)) + "");
-	// 	roiTable.setModel(model);
-	// }else
-	// {
-	// System.out.println("other2");
-	// }
-	/****************************************************** */
-	
-	// 	totalProfit = 0;
-	// 	String[] columnNames = new String[] {"#", "Order #", "Total", "Shipping Cost", "Price", "Shipping Paid", "Tax"};
-	// 	DefaultTableModel model = new DefaultTableModel(0, 0);
-	// 	model.setColumnIdentifiers(columnNames);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println("Number of rows in the model: " + model.getRowCount());
+			tableProfitLbl.setText("Total profit: $" + String.valueOf(decfor.format(totalProfit)) + "");
+			roiTable.setModel(model);
+		} else
+		{
+			System.out.println("other2");
+		}
+	}
 
-	// 	File file = new File("accounts.txt");
+	public void sort(int col){
+        SortingStrat_IF sortingStrat = new BubbleSort(); //bubble sort by default
 
-	// 	Scanner scanner = null;
-	// 	try {
-	// 		scanner = new Scanner(file);
-	// 	} catch (FileNotFoundException e) {
-	// 		throw new RuntimeException(e);
-	// 	}
-	// 	int i = 1;
-	// 	int nextIndex;
+        String colName = roiTable.getColumnName(col);
 
-	// 	while (scanner.hasNextLine()) {
-	// 		String line = scanner.nextLine();
-	// 		if(line.substring(0, line.indexOf(",")).equals(mainFrame.getUser())) {
-	// 			nextIndex = line.indexOf(",");
-	// 			nextIndex = line.indexOf(",", nextIndex+1);
-	// 			while(line.indexOf(",", nextIndex+1) != -1) {
-	// 				String orderNum = line.substring(nextIndex+1, line.indexOf(",", nextIndex+1));
-	// 				nextIndex = line.indexOf(",", nextIndex+1);
-	// 				String total = line.substring(nextIndex+1, line.indexOf(",", nextIndex+1));
-	// 				nextIndex = line.indexOf(",", nextIndex+1);
-	// 				String shipCost = line.substring(nextIndex+1, line.indexOf(",", nextIndex+1));
-	// 				nextIndex = line.indexOf(",", nextIndex+1);
-	// 				String soldPrice = line.substring(nextIndex+1, line.indexOf(",", nextIndex+1));
-	// 				nextIndex = line.indexOf(",", nextIndex+1);
-	// 				String shipPaid = line.substring(nextIndex+1, line.indexOf(",", nextIndex+1));
-	// 				nextIndex = line.indexOf(",", nextIndex+1);
-	// 				String tax = line.substring(nextIndex+1, line.indexOf(",", nextIndex+1));
-	// 				nextIndex = line.indexOf(",", nextIndex+1);
-					
-	// 				//modify this to add on the database
-	// 				model.addRow(new Object[] {String.valueOf(i), orderNum, total, shipCost, soldPrice, shipPaid, tax});
-	// 				totalProfit += mainFrame.getManager().profitCalc(total, shipCost, tax);
-	// 				i++;
-	// 			}
-	// 			break;
-	// 		}
-	// 	}
-	// 	scanner.close();
-	// 	tableProfitLbl.setText("Total profit: $" + String.valueOf(decfor.format(totalProfit)) + "");
-	// 	roiTable.setModel(model);
-	
+        switch(colName) { //quicksort if one of these
+            case "Order #":
+                sortingStrat = new QuickSort();
+                break;
+            case "Total":
+                sortingStrat = new QuickSort();
+                break;
+            case "Price":
+                sortingStrat = new QuickSort();
+        }
 
-	
+        roiTable = sortingStrat.sort(roiTable, col);
+    }
 
+
+
+	public class TableHeaderMouseListener extends MouseAdapter {
+		
+		private JTable table;
+
+		public TableHeaderMouseListener() {
+			this.table = roiTable;
+			System.out.println("init");
+		}
+		
+		public void mouseClicked(MouseEvent event) {
+			Point point = event.getPoint();
+			int column = table.columnAtPoint(point);
+			sort(column);
+			System.out.println("click");
+		}
+	}
+
+}
 
