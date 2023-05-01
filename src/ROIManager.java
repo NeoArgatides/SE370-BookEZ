@@ -160,7 +160,7 @@ public class ROIManager {
 		    while (scanner.hasNextLine()) {
 		        String line = scanner.nextLine();
                 if(!line.equals("")) {
-                    if (line.substring(0, line.indexOf(",")).equals(mainFrame.getUser().getUsername())) {
+                    if (line.substring(0, line.indexOf(",")).equals(mainFrame.getUser())) {
                         Path path = Paths.get("accounts.txt");
                         List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
                         String userLine = lines.get(lineNum);

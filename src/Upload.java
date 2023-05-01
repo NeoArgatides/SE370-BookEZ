@@ -6,8 +6,6 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
-
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -89,11 +87,6 @@ public class Upload extends JPanel{
 	
 	private void extract() {
 		mainFrame.getManager().extractData(this);
-		try {
-			mainFrame.goToTable();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		mainFrame.goToTable();
 	}
 }
