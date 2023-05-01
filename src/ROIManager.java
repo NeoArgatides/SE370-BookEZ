@@ -99,6 +99,7 @@ public class ROIManager {
         try {
             loggedUser = userDAO.getUserByUsername(mainFrame.getUser());
             System.out.println("Testing userid: " + loggedUser.getId());
+            receiptDAO.addReceiptToDatabase(loggedUser, orderNum, total, shipCost, soldPrice, shipPaid, tax);
 
         } catch (SQLException e) {
             // TODO Auto-generated catch block
@@ -159,7 +160,7 @@ public class ROIManager {
 		    while (scanner.hasNextLine()) {
 		        String line = scanner.nextLine();
                 if(!line.equals("")) {
-                    if (line.substring(0, line.indexOf(",")).equals(mainFrame.getUser())) {
+                    if (line.substring(0, line.indexOf(",")).equals(mainFrame.getUser().getUsername())) {
                         Path path = Paths.get("accounts.txt");
                         List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
                         String userLine = lines.get(lineNum);
