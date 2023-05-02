@@ -78,28 +78,34 @@ public class ROIManager {
 
         //collecting each string segment from the files 
         orderNum = convertAndFind(s, "Order number ", nextEnd, 13);
-        System.out.println("orderNum: "+orderNum);
         total = convertAndFind(s, "$", nextEnd, 1);
-        System.out.println("total: "+total);
         shipCost = convertAndFind(s, "$", nextEnd, 1);
-        System.out.println("shipCost: "+shipCost);
         soldPrice = convertAndFind(s, "$", nextEnd, 1);
-        System.out.println("soldPrice: "+soldPrice);
         shipPaid = convertAndFind(s, "$", nextEnd, 1);
-        System.out.println("shipPaid: "+shipPaid);
         tax = "0";
-        System.out.println("tax: "+tax);
-
-        System.out.println("TESTING");
-        // System.out.println("information: "+ orderNum + " " + total + " " + shipCost + " " + soldPrice + " " + shipPaid + " " + tax);
-        //adding all collected information to output.text file
-
         /************** */
         User loggedUser;
         try {
+            
             loggedUser = userDAO.getUserByUsername(mainFrame.getUser());
-            System.out.println("Testing userid: " + loggedUser.getId());
-            receiptDAO.addReceiptToDatabase(loggedUser, orderNum, total, shipCost, soldPrice, shipPaid, tax);
+            // receiptDAO.addReceiptToDatabase(loggedUser, orderNum, total, shipCost, soldPrice, shipPaid, tax);
+            // orderNum = "12345";
+            // total = "10.50";
+            // shipCost = "5.00";
+            // soldPrice = "15.00";
+            // shipPaid = "2.00";
+            // tax = "1.50";
+
+        try {
+            boolean success = receiptDAO.addReceiptToDatabase(loggedUser, orderNum, total, shipCost, soldPrice, shipPaid, tax);
+            if (success) {
+                System.out.println("Receipt added to database.");
+            } else {
+                System.out.println("Failed to add receipt to database.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error adding receipt to database: " + e.getMessage());
+        }
 
         } catch (SQLException e) {
             // TODO Auto-generated catch block
@@ -138,41 +144,4 @@ public class ROIManager {
         return profit;//returning profit obtained
 
     }//end of profit calculation
-	
-	private void addInfoToDatabase(String orderNum, String total, String shipCost, String soldPrice, String shipPaid, String tax) throws IOException {
-        System.out.println("IN addToDatabase()");
-        System.out.println("orderNum: "+orderNum);
-        System.out.println("total: "+total);
-        System.out.println("shipCost: "+shipCost);
-        System.out.println("soldPrice: "+soldPrice);
-        System.out.println("shipPaid: "+shipPaid);
-        System.out.println("tax: "+tax);
-
-
-        System.out.println("information: "+ orderNum + " " + total + " " + shipCost + " " + soldPrice + " " + shipPaid + " " + tax);
-
-        File file = new File("accounts.txt");
-
-		try {
-		    Scanner scanner = new Scanner(file);
-
-		    int lineNum = 0;
-		    while (scanner.hasNextLine()) {
-		        String line = scanner.nextLine();
-                if(!line.equals("")) {
-                    if (line.substring(0, line.indexOf(",")).equals(mainFrame.getUser())) {
-                        Path path = Paths.get("accounts.txt");
-                        List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
-                        String userLine = lines.get(lineNum);
-                        lines.set(lineNum, userLine.replace("\n", "") + orderNum + ',' + total + ',' + shipCost + ',' + soldPrice + ',' + shipPaid + ',' + tax + ',');
-                        Files.write(path, lines, StandardCharsets.UTF_8);
-                    }
-                }
-                lineNum++;
-		    }
-		    scanner.close();
-		} catch(FileNotFoundException e) { 
-			e.printStackTrace();
-		}
-    }//end of creating ROI table 
 }

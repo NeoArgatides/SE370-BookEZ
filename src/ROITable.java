@@ -123,7 +123,7 @@ public class ROITable extends JPanel implements dbAO_IF {
 		 try {
 			List<Receipt> receipts = receiptDAO.getReceiptsForUser(loggedUser);
 			for (Receipt receipt : receipts) {
-				String orderNum = String.valueOf(receipt.getId());
+				String orderNum = String.valueOf(receipt.getOrderNumber());
 				String total = String.valueOf(receipt.getTotal());
 				String shipCost = String.valueOf(receipt.getShippingPaid());
 				String soldPrice = String.valueOf(receipt.getPrice());

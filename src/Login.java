@@ -177,30 +177,7 @@ public class Login extends JPanel implements dbAO_IF{
 				} else {
 					System.out.println("Invalid username or password");
 				}
-						
-				
 
-				
-        		// Scanner sc = null;
-        		// try {
-        		// 	sc = new Scanner(mainFrame.getFile());
-        		// } catch (FileNotFoundException e1) {
-        		// 	e1.printStackTrace();
-        		// }
-        		
-        		// String line;
-        		// int indexUsername;
-        		// while(sc.hasNextLine()) {
-        		// 	line = sc.nextLine();
-        		// 	indexUsername = line.indexOf(",");
-        		// 	if(line.substring(0, indexUsername).equals(username) && line.substring(indexUsername+1, line.indexOf(",", indexUsername+1)).equals(password)) {
-        		// 		mainFrame.login(username);
-        		// 		break;
-        		// 	}
-        		// }
-        		// if(!sc.hasNextLine()) {
-        		// 	errorLbl.setText("Invalid name/PWD");
-        		// }
         		
         	}
         });

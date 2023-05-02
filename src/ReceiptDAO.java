@@ -1,3 +1,4 @@
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,36 +34,37 @@ public class ReceiptDAO {
 
     /////
 
-    public void addReceiptToDatabase(User user, String orderNum, String total, String shipCost, String soldPrice, String shipPaid, String tax) throws SQLException {
-        String query = "INSERT INTO Receipts (user_id, order_id, total, shipping_cost, price, shipping_paid, tax) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        
-        
-        PreparedStatement statement = connection.prepareStatement(query);
-        // orderNum = "3120-312321-3";
-
-        // total = "12000000";
-        // double totalValue = Double.parseDouble(total);
-        // shipCost = "12000000";
-        // double shippingCost = Double.parseDouble(shipCost);
-        // soldPrice = "12000000";
-        // double price = Double.parseDouble(soldPrice);
-        // shipPaid = "12000000";
-        // double shippingPaid = Double.parseDouble(shipPaid);
-        // tax = "12000000";
-        // double taxValue = Double.parseDouble(tax);
-
-
-        // statement.setInt(1, user.getId());
-        // "3120-312321-3"
-        statement.setInt(1, user.getId());//user1
-        statement.setString(2, orderNum);
-        statement.setDouble(3, Double.parseDouble(total));
-        statement.setDouble(4, Double.parseDouble(shipCost));
-        statement.setDouble(5, Double.parseDouble(soldPrice));
-        statement.setDouble(6, Double.parseDouble(shipPaid));
-        statement.setDouble(7, Double.parseDouble(tax));
-        // int result = statement.executeUpdate();
-        statement.executeUpdate();
-        System.out.println("finished uploading");
+    public boolean addReceiptToDatabase(User user, String orderNum, String total, String shipCost, String soldPrice, String shipPaid, String tax) throws SQLException {
+        System.out.println("IN ADD");
+        PreparedStatement stmt = null;
+        boolean success = false;
+        try {
+            // Prepare SQL statement with parameters
+            stmt = connection.prepareStatement("INSERT INTO receipts (user_id, order_id, total, shipping_cost, price, shipping_paid, tax) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            System.out.println("IN ADD1");
+            stmt.setInt(1, user.getId());
+            System.out.println("IN ADD2");
+            stmt.setString(2, orderNum);
+            System.out.println("IN ADD3");
+            stmt.setDouble(3, Double.parseDouble(total));
+            stmt.setDouble(4, Double.parseDouble(shipCost));
+            stmt.setDouble(5, Double.parseDouble(soldPrice));
+            stmt.setDouble(6, Double.parseDouble(shipPaid));
+            stmt.setDouble(7, Double.parseDouble(tax));
+            // Execute SQL statement
+            int rows = stmt.executeUpdate();
+            
+            // Check if the SQL statement was successful
+            if (rows > 0) {
+                success = true;
+            }
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+        return success;
     }
+    
+    
 }
