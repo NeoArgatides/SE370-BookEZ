@@ -40,20 +40,32 @@ public class UserDAO {
     public boolean createUser(String username, String password) throws SQLException {
         PreparedStatement stmt = null;
         boolean success = false;
-        try {
-            stmt = conn.prepareStatement("INSERT INTO users (username, password) VALUES (?, ?)");
-            stmt.setString(1, username);
-            stmt.setString(2, password);
-            int rows = stmt.executeUpdate();
-            if (rows > 0) {
-                success = true;
-            }
-        } finally {
-            if (stmt != null) {
-                stmt.close();
-            }
+            // stmt = conn.prepareStatement("INSERT INTO users (username, password) VALUES (?, ?)");
+         
+
+    try {
+        // Check if user already exists
+        stmt = conn.prepareStatement("SELECT COUNT(*) FROM users WHERE username = ?");
+        stmt.setString(1, username);
+        ResultSet rs = stmt.executeQuery();
+        rs.next();
+        int count = rs.getInt(1);
+        if (count > 0) {
+            System.out.println("Error: User already exists.");
+            return false;
         }
-        return success;
+        
+        // Insert new user
+        stmt = conn.prepareStatement("INSERT INTO users (username, password) VALUES (?, ?)");
+        stmt.setString(1, username);
+        stmt.setString(2, password);
+        stmt.executeUpdate();
+        return true;
+    } finally {
+        if (stmt != null) {
+            stmt.close();
+        }
+    }
     }
     
     public User getUserByUsername(String username) throws SQLException {
