@@ -37,6 +37,25 @@ public class UserDAO {
         return user;
     }
 
+    public boolean createUser(String username, String password) throws SQLException {
+        PreparedStatement stmt = null;
+        boolean success = false;
+        try {
+            stmt = conn.prepareStatement("INSERT INTO users (username, password) VALUES (?, ?)");
+            stmt.setString(1, username);
+            stmt.setString(2, password);
+            int rows = stmt.executeUpdate();
+            if (rows > 0) {
+                success = true;
+            }
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+        return success;
+    }
+    
     public User getUserByUsername(String username) throws SQLException {
         PreparedStatement stmt = null;
         ResultSet rs = null;

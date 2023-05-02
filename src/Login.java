@@ -120,6 +120,8 @@ public class Login extends JPanel implements dbAO_IF{
         {
         	public void actionPerformed(ActionEvent e)
         	{
+
+				/* 
         		String username = usernameTextField.getText();
         		String password = passwordTextField.getText();
 
@@ -136,6 +138,29 @@ public class Login extends JPanel implements dbAO_IF{
         		} else {
         			errorLbl.setText("Invalid name/PWD");
         		}
+				*/
+
+				String username = usernameTextField.getText();
+				char[] passwordChars = passwordTextField.getPassword();
+				String password = new String(passwordChars);
+				boolean success= false;
+
+				// sign in the user
+				try {
+					success = userDAO.createUser(username, password);
+					if (success) {
+                	System.out.println("User added to database.");
+					} else {
+						System.out.println("Failed to add receipt to database.");
+					}
+
+				} catch (SQLException e1) {
+					System.out.println("Error adding receipt to database: " + e1.getMessage());
+
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
         	}
         });
 		//verification
@@ -155,13 +180,6 @@ public class Login extends JPanel implements dbAO_IF{
 
 				 //String password = passwordTextField.getPassword();
 				String password = new String(passwordChars);
-
-				//Arrays.fill(input, '*');
-				//passwordTextField.fill(input, '0');
-				//for(int i = 0; i <= 20; i++){
-					//String password = new String(input);
-				 
-				//System.out.println(username + " " + password);
 
 				// sign in the user
 				try {
