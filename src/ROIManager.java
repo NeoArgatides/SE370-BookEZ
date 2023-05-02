@@ -130,9 +130,11 @@ public class ROIManager {
         double profit = 0.0;//used for calculations
         
         //turning each string into a double for calculations 
-        double t = Double.parseDouble(total.substring(1));
-        double sC = Double.parseDouble(shipCost.substring(1));
-        double ta = Double.parseDouble(tax.substring(1));
+        //        double t = Double.parseDouble(total.substring(1));
+
+        double t = Double.parseDouble(total);
+        double sC = Double.parseDouble(shipCost);
+        double ta = Double.parseDouble(tax);
         
         profit = t - sC - ta;//calculating profit 
         
