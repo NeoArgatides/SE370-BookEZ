@@ -76,17 +76,6 @@ public class ROITable extends JPanel implements dbAO_IF {
         	}
         });
 
-		JButton sortBtn = new JButton("Sort");
-		tableBackPanel.add(sortBtn);
-		sortBtn.addActionListener(new ActionListener()
-        {
-        	public void actionPerformed(ActionEvent e)
-        	{
-        		sort(6);
-				System.out.print("jdsfbjdasfb");
-        	}
-        });
-
 		JPanel tableProfitPanel = new JPanel();
 		tableProfitPanel.setBackground(new Color(153, 204, 255));
 		add(tableProfitPanel, BorderLayout.SOUTH);
@@ -155,13 +144,13 @@ public class ROITable extends JPanel implements dbAO_IF {
 
         switch(colName) { //quicksort if one of these
             case "Order #":
-                sortingStrat = new QuickSort();
+                sortingStrat = new InsertionSort();
                 break;
             case "Total":
-                sortingStrat = new QuickSort();
+                sortingStrat = new InsertionSort();
                 break;
             case "Price":
-                sortingStrat = new QuickSort();
+                sortingStrat = new InsertionSort();
         }
 
         roiTable = sortingStrat.sort(roiTable, col);
