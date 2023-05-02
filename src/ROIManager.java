@@ -81,7 +81,7 @@ public class ROIManager {
         shipCost = convertAndFind(s, "$", nextEnd, 1);
         soldPrice = convertAndFind(s, "$", nextEnd, 1);
         shipPaid = convertAndFind(s, "$", nextEnd, 1);
-        tax = "0";
+        tax = convertAndFind(s, "$", nextEnd, 1);
         /************** */
         User loggedUser;
         try {
