@@ -161,7 +161,7 @@ public class Login extends JPanel implements dbAO_IF{
 				//for(int i = 0; i <= 20; i++){
 					//String password = new String(input);
 				 
-				System.out.println(username + " " + password);
+				//System.out.println(username + " " + password);
 
 				// sign in the user
 				try {
@@ -172,7 +172,7 @@ public class Login extends JPanel implements dbAO_IF{
 				}
 				if (currentUser != null) {
 					// get the receipts for the user
-					System.out.println("signed in");
+					System.out.println("signed in as " + username);
 					mainFrame.login(username);
 				} else {
 					System.out.println("Invalid username or password");

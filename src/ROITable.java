@@ -117,7 +117,7 @@ public class ROITable extends JPanel implements dbAO_IF {
 		
 		if(loggedUser!=null )
 		{
-		 System.out.println("refreshed/loggeduser");
+		 System.out.println("refresh/loggeduser");
 		 totalProfit = 0;
 		 int i = 1;
 		 try {
@@ -131,7 +131,7 @@ public class ROITable extends JPanel implements dbAO_IF {
 				String tax = String.valueOf(receipt.getTax());
 				// modify this to add on the database
 				model.addRow(new Object[] {String.valueOf(i), orderNum, total, shipCost, soldPrice, shipPaid, tax});
-				System.out.println(i+ " "+ receipt.getOrderNumber() + ", " + receipt.getTotal() + ", " + receipt.getShippingCost() + ", " + receipt.getPrice() + ", " + receipt.getShippingPaid() + ", " + receipt.getTax());
+				//System.out.println(i+ " "+ receipt.getOrderNumber() + ", " + receipt.getTotal() + ", " + receipt.getShippingCost() + ", " + receipt.getPrice() + ", " + receipt.getShippingPaid() + ", " + receipt.getTax());
 
 				totalProfit += mainFrame.getManager().profitCalc(total, shipCost, tax);
 				i++;
@@ -142,13 +142,10 @@ public class ROITable extends JPanel implements dbAO_IF {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			System.out.println("Number of rows in the model: " + model.getRowCount());
+			//System.out.println("Number of rows in the model: " + model.getRowCount());
 			tableProfitLbl.setText("Total profit: $" + String.valueOf(decfor.format(totalProfit)) + "");
 			roiTable.setModel(model);
-		} else
-		{
-			System.out.println("other2");
-		}
+		} 
 	}
 
 	public void sort(int col){
@@ -178,14 +175,14 @@ public class ROITable extends JPanel implements dbAO_IF {
 
 		public TableHeaderMouseListener() {
 			this.table = roiTable;
-			System.out.println("init");
+			//System.out.println("init");
 		}
 		
 		public void mouseClicked(MouseEvent event) {
 			Point point = event.getPoint();
 			int column = table.columnAtPoint(point);
 			sort(column);
-			System.out.println("click");
+			//System.out.println("click");
 		}
 	}
 

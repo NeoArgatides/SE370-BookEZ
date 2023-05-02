@@ -70,7 +70,6 @@ public class ROIManager {
 	//used to extract the desired information from an ebay order reciept pdf and add new info to output.text file
     //boolean used to determine wether the extracted information should be stored in the vector
     protected void outputWriter(String s){
-        System.out.println("*******----START of outputWriter()----*****");
         //strings to collect information
         String orderNum, total, shipCost, soldPrice, shipPaid, tax, profitC;
         
@@ -111,8 +110,6 @@ public class ROIManager {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        System.out.println("*******----END of outputWriter()----*****");
-
     }//end of extractInfo
 	
 	String convertAndFind(String docText, String id, int idInt, int mod){

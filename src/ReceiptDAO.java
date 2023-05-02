@@ -35,17 +35,13 @@ public class ReceiptDAO {
     /////
 
     public boolean addReceiptToDatabase(User user, String orderNum, String total, String shipCost, String soldPrice, String shipPaid, String tax) throws SQLException {
-        System.out.println("IN ADD");
         PreparedStatement stmt = null;
         boolean success = false;
         try {
             // Prepare SQL statement with parameters
             stmt = connection.prepareStatement("INSERT INTO receipts (user_id, order_id, total, shipping_cost, price, shipping_paid, tax) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            System.out.println("IN ADD1");
             stmt.setInt(1, user.getId());
-            System.out.println("IN ADD2");
             stmt.setString(2, orderNum);
-            System.out.println("IN ADD3");
             stmt.setDouble(3, Double.parseDouble(total));
             stmt.setDouble(4, Double.parseDouble(shipCost));
             stmt.setDouble(5, Double.parseDouble(soldPrice));
