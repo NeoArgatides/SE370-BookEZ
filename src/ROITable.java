@@ -114,7 +114,7 @@ public class ROITable extends JPanel implements dbAO_IF {
 			for (Receipt receipt : receipts) {
 				String orderNum = String.valueOf(receipt.getOrderNumber());
 				String total = String.valueOf(receipt.getTotal());
-				String shipCost = String.valueOf(receipt.getShippingPaid());
+				String shipCost = String.valueOf(receipt.getShippingCost());
 				String soldPrice = String.valueOf(receipt.getPrice());
 				String shipPaid = String.valueOf(receipt.getShippingPaid());
 				String tax = String.valueOf(receipt.getTax());
@@ -144,7 +144,7 @@ public class ROITable extends JPanel implements dbAO_IF {
 
         switch(colName) { //quicksort if one of these
             case "Order #":
-                sortingStrat = new InsertionSort();
+                sortingStrat = new InsertionSort(1);
                 break;
             case "Total":
                 sortingStrat = new InsertionSort();

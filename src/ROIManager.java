@@ -78,7 +78,8 @@ public class ROIManager {
         //collecting each string segment from the files 
         orderNum = convertAndFind(s, "Order number ", nextEnd, 13);
         total = convertAndFind(s, "$", nextEnd, 1);
-        shipCost = convertAndFind(s, "$", nextEnd, 1);
+        shipCost = convertAndFind(s, "Cost: $", nextEnd, 7);
+        System.out.println(shipCost);
         soldPrice = convertAndFind(s, "$", nextEnd, 1);
         shipPaid = convertAndFind(s, "$", nextEnd, 1);
         tax = convertAndFind(s, "$", nextEnd, 1);
