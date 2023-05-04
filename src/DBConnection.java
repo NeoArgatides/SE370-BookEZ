@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import javax.json.*;
 
 
-public class DBConnection {
+public class DBConnection implements IDBConnection {
     private static DBConnection instance;
     private Connection conn;
 
