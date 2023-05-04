@@ -46,7 +46,7 @@ public class Login extends JPanel implements dbAO_IF{
 	private Connection connection;
 	private UserDAO userDAO;
 	private User currentUser;
-
+	private final JPanel errorLable = new JPanel();
 	// public Login(Connection connection) {
 	// 	this.connection = connection;
 	// 	userDAO = new UserDAO(connection);
@@ -116,52 +116,43 @@ public class Login extends JPanel implements dbAO_IF{
 
 
 
-		registerBtn.addActionListener(new ActionListener() // NeedsWork To register properly with new Database system
-        {
-        	public void actionPerformed(ActionEvent e)
-        	{
-        		String username = usernameTextField.getText();
-        		String password = passwordTextField.getText();
+registerBtn.addActionListener(new ActionListener() {
+    public void actionPerformed(ActionEvent e) {
+        String username = usernameTextField.getText();
+        char[] passwordChars = passwordTextField.getPassword();
+        String password = new String(passwordChars);
 
-        		if(!username.equals("") && !password.equals("") && !usernameTaken(username)) {
-        			BufferedWriter bf = null;
-        			try {
-						bf = new BufferedWriter(new FileWriter("accounts.txt", true));
-						bf.write(username + ',' + password + ",\n");
-						bf.close();
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
-        			mainFrame.login(username);
-        		} else {
-        			errorLbl.setText("Invalid name/PWD");
-        		}
-        	}
-        });
-		//verification
-		// loginBtn.addActionListener(j -> {
-		// 	char[] p = passwordTextField.getPassword();
-		// 	String passwordString = new String(p);
-		// });
-		
+        boolean success = false;
+
+        try {
+            success = userDAO.createUser(username, password);
+            if (success) {
+                errorLbl.setText("User added to database.");
+
+            } else {
+                errorLbl.setText("Error: User already exists.");
+				
+
+            }
+        } catch (SQLException e1) {
+            errorLbl.setText("Error adding user to database: " + e1.getMessage());
+			e1.printStackTrace();
+        }
+    }
+});
+
 		loginBtn.addActionListener(new ActionListener()
         {
 
         	public void actionPerformed(ActionEvent e)
         	{
+				
         		String username = usernameTextField.getText();
         		// String password = passwordTextField.getText();
 				 char[] passwordChars = passwordTextField.getPassword();
 
 				 //String password = passwordTextField.getPassword();
 				String password = new String(passwordChars);
-
-				//Arrays.fill(input, '*');
-				//passwordTextField.fill(input, '0');
-				//for(int i = 0; i <= 20; i++){
-					//String password = new String(input);
-				 
-				System.out.println(username + " " + password);
 
 				// sign in the user
 				try {
@@ -172,35 +163,14 @@ public class Login extends JPanel implements dbAO_IF{
 				}
 				if (currentUser != null) {
 					// get the receipts for the user
-					System.out.println("signed in");
+					System.out.println("signed in as " + username);
+		
 					mainFrame.login(username);
 				} else {
+					errorLbl.setText("Invalid username or password");
 					System.out.println("Invalid username or password");
 				}
-						
-				
 
-				
-        		// Scanner sc = null;
-        		// try {
-        		// 	sc = new Scanner(mainFrame.getFile());
-        		// } catch (FileNotFoundException e1) {
-        		// 	e1.printStackTrace();
-        		// }
-        		
-        		// String line;
-        		// int indexUsername;
-        		// while(sc.hasNextLine()) {
-        		// 	line = sc.nextLine();
-        		// 	indexUsername = line.indexOf(",");
-        		// 	if(line.substring(0, indexUsername).equals(username) && line.substring(indexUsername+1, line.indexOf(",", indexUsername+1)).equals(password)) {
-        		// 		mainFrame.login(username);
-        		// 		break;
-        		// 	}
-        		// }
-        		// if(!sc.hasNextLine()) {
-        		// 	errorLbl.setText("Invalid name/PWD");
-        		// }
         		
         	}
         });
@@ -213,24 +183,6 @@ public class Login extends JPanel implements dbAO_IF{
 		usernameTextField.setText("");
 		passwordTextField.setText("");
 		errorLbl.setText("");
-		// System.out.println("hiiii");
 	}
 	
-	public boolean usernameTaken(String username) {
-		Scanner sc = null;
-		try {
-			sc = new Scanner(mainFrame.getFile());
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		}
-		
-		String line;
-		while(sc.hasNextLine()) {
-			line = sc.nextLine();
-			if(line.substring(0 , line.indexOf(",")).equals(username)) {
-				return true;
-			}
-		}
-		return false;
-	}
 }

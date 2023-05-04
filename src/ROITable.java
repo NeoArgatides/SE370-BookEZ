@@ -76,17 +76,6 @@ public class ROITable extends JPanel implements dbAO_IF {
         	}
         });
 
-		JButton sortBtn = new JButton("Sort");
-		tableBackPanel.add(sortBtn);
-		sortBtn.addActionListener(new ActionListener()
-        {
-        	public void actionPerformed(ActionEvent e)
-        	{
-        		sort(6);
-				System.out.print("jdsfbjdasfb");
-        	}
-        });
-
 		JPanel tableProfitPanel = new JPanel();
 		tableProfitPanel.setBackground(new Color(153, 204, 255));
 		add(tableProfitPanel, BorderLayout.SOUTH);
@@ -101,7 +90,10 @@ public class ROITable extends JPanel implements dbAO_IF {
 		tableProfitLbl.setHorizontalAlignment(SwingConstants.CENTER);
 		tableProfitLbl.setFont(f.deriveFont(f.getStyle() | Font.BOLD, 15));
 		tableProfitPanel.add(tableProfitLbl);
+		JTableHeader header = roiTable.getTableHeader();
+        header.addMouseListener(new TableHeaderMouseListener());
 	}
+
 
 	public void refreshTable() throws SQLException {
 		User loggedUser;
@@ -114,21 +106,21 @@ public class ROITable extends JPanel implements dbAO_IF {
 		
 		if(loggedUser!=null )
 		{
-		 System.out.println("refreshed/loggeduser");
+		 System.out.println("refresh/loggeduser");
 		 totalProfit = 0;
 		 int i = 1;
 		 try {
 			List<Receipt> receipts = receiptDAO.getReceiptsForUser(loggedUser);
 			for (Receipt receipt : receipts) {
-				String orderNum = String.valueOf(receipt.getId());
+				String orderNum = String.valueOf(receipt.getOrderNumber());
 				String total = String.valueOf(receipt.getTotal());
-				String shipCost = String.valueOf(receipt.getShippingPaid());
+				String shipCost = String.valueOf(receipt.getShippingCost());
 				String soldPrice = String.valueOf(receipt.getPrice());
 				String shipPaid = String.valueOf(receipt.getShippingPaid());
 				String tax = String.valueOf(receipt.getTax());
 				// modify this to add on the database
 				model.addRow(new Object[] {String.valueOf(i), orderNum, total, shipCost, soldPrice, shipPaid, tax});
-				System.out.println(i+ " "+ receipt.getOrderNumber() + ", " + receipt.getTotal() + ", " + receipt.getShippingCost() + ", " + receipt.getPrice() + ", " + receipt.getShippingPaid() + ", " + receipt.getTax());
+				//System.out.println(i+ " "+ receipt.getOrderNumber() + ", " + receipt.getTotal() + ", " + receipt.getShippingCost() + ", " + receipt.getPrice() + ", " + receipt.getShippingPaid() + ", " + receipt.getTax());
 
 				totalProfit += mainFrame.getManager().profitCalc(total, shipCost, tax);
 				i++;
@@ -139,45 +131,30 @@ public class ROITable extends JPanel implements dbAO_IF {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			System.out.println("Number of rows in the model: " + model.getRowCount());
+			//System.out.println("Number of rows in the model: " + model.getRowCount());
 			tableProfitLbl.setText("Total profit: $" + String.valueOf(decfor.format(totalProfit)) + "");
 			roiTable.setModel(model);
-		} else
-		{
-			System.out.println("other2");
-		}
+		} 
 	}
 
 	public void sort(int col){
-		SortingStrat_IF sortingStrat = null;
+        SortingStrat_IF sortingStrat = new BubbleSort(); //bubble sort by default
 
-		String colName = roiTable.getColumnName(col);
+        String colName = roiTable.getColumnName(col);
 
-		switch(colName) {
-			case "#":
-				sortingStrat = new BubbleSort();
-				break;
-			case "Order #":
-				sortingStrat = new QuickSort();
-				break;
-			case "Total":
-				sortingStrat = new QuickSort();
-				break;
-			case "Shipping Cost":
-				sortingStrat = new BubbleSort();
-				break;
-			case "Price":
-				sortingStrat = new QuickSort();
-				break;
-			case "Shipping Paid":
-				sortingStrat = new BubbleSort();
-				break;
-			case "Tax":
-				sortingStrat = new BubbleSort();
-		}
+        switch(colName) { //quicksort if one of these
+            case "Order #":
+                sortingStrat = new InsertionSort(1);
+                break;
+            case "Total":
+                sortingStrat = new InsertionSort();
+                break;
+            case "Price":
+                sortingStrat = new InsertionSort();
+        }
 
-		roiTable = sortingStrat.sort(roiTable, col);
-	}
+        roiTable = sortingStrat.sort(roiTable, col);
+    }
 
 
 
@@ -187,14 +164,14 @@ public class ROITable extends JPanel implements dbAO_IF {
 
 		public TableHeaderMouseListener() {
 			this.table = roiTable;
-			System.out.println("init");
+			//System.out.println("init");
 		}
 		
 		public void mouseClicked(MouseEvent event) {
 			Point point = event.getPoint();
 			int column = table.columnAtPoint(point);
 			sort(column);
-			System.out.println("click");
+			//System.out.println("click");
 		}
 	}
 
