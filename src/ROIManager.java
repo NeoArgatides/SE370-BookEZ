@@ -43,8 +43,11 @@ public class ROIManager {
             try{
                 File files[] = fileUpload.getSelectedFiles();//array of files that contains selected files  
 
-                for(File file : files){//itterate through collected files 
+		while (fileIterator.hasNext()) {
+			File file = fileIterator.next();
+                //for(File file : files){//itterate through collected files 
                  
+			
                     //getting path name and convering into a displayable method for user 
                     String path = file.getAbsolutePath() + "\n";//collect path 
                     path = convertAndFind(path, "Ebay Orders/", 0, 12);
