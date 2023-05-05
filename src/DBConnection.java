@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import javax.json.*;
 
 
-public class DBConnection implements dbAO_IF {
+public class DBConnection {
     private static DBConnection instance;
     private Connection conn;
 
@@ -28,8 +28,7 @@ public class DBConnection implements dbAO_IF {
         }
     }
 
-    @Override
-    public dbAO_IF getInstance() throws SQLException {
+    public static DBConnection getInstance() throws SQLException {
         if (instance == null) {
             instance = new DBConnection();
         } else if (instance.getConnection().isClosed()) {
@@ -39,7 +38,7 @@ public class DBConnection implements dbAO_IF {
         return instance;
     }
     
-    @Override
+    
     public Connection getConnection() {
         return conn;
     }
