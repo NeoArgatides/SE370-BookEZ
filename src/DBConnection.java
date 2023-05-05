@@ -29,7 +29,7 @@ public class DBConnection implements dbAO_IF {
     }
 
     @Override
-    public dbAO_IF getInstance() throws SQLException {
+    public static dbAO_IF getInstance() throws SQLException {
         if (instance == null) {
             instance = new DBConnection();
         } else if (instance.getConnection().isClosed()) {
