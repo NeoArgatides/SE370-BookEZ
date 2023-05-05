@@ -143,9 +143,9 @@ public class ROITable extends JPanel {
         String colName = roiTable.getColumnName(col);
 
         switch(colName) { //change strategy
-            case "#":
-                sortingStrat = new BubbleSort(1);
-                break;
+            // case "#":
+            //     sortingStrat = new BubbleSort(1);
+            //     break;
 			case "Order #":
                 sortingStrat = new InsertionSort(1);
                 break;
