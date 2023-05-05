@@ -9,12 +9,12 @@ public class FileIterator implements Iterator<File> {
     this.files = files;
     } //this should be enough of an iterator to qualify
     
-    @override
+    @Override
     public boolean hasNext(){
       return position < files.length;
     } //test for next
     
-    @override
+    @Override
     public File next(){
       return files[position++];
     } //get the next

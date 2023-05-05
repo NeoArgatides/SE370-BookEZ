@@ -27,7 +27,7 @@ import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class ROITable extends JPanel implements dbAO_IF {
+public class ROITable extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private MainFrame mainFrame;
 	private JTable roiTable = new JTable();

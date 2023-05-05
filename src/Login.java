@@ -26,7 +26,7 @@ import javax.swing.SwingConstants;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class Login extends JPanel implements dbAO_IF{
+public class Login extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private final JButton registerBtn = new JButton("Register");
 	private final JButton loginBtn = new JButton("Login");
@@ -184,5 +184,5 @@ registerBtn.addActionListener(new ActionListener() {
 		passwordTextField.setText("");
 		errorLbl.setText("");
 	}
-	
+
 }

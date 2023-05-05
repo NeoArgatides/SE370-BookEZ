@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import javax.json.*;
 
 
-public class DBConnection implements IDBConnection {
+public class DBConnection implements dbAO_IF {
     private static DBConnection instance;
     private Connection conn;
 
@@ -26,19 +26,10 @@ public class DBConnection implements IDBConnection {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
-        
-        
     }
 
-    // public static synchronized DBConnection getInstance() throws SQLException {
-    //     if (instance == null) {
-    //         instance = new DBConnection();
-    //     }
-    //     return instance;
-    // }
-
-    public static DBConnection getInstance() throws SQLException {
+    @Override
+    public dbAO_IF getInstance() throws SQLException {
         if (instance == null) {
             instance = new DBConnection();
         } else if (instance.getConnection().isClosed()) {
@@ -48,7 +39,7 @@ public class DBConnection implements IDBConnection {
         return instance;
     }
     
-
+    @Override
     public Connection getConnection() {
         return conn;
     }
