@@ -37,7 +37,21 @@ public class ReceiptDAO {
     public boolean addReceiptToDatabase(User user, String orderNum, String total, String shipCost, String soldPrice, String shipPaid, String tax) throws SQLException {
         PreparedStatement stmt = null;
         boolean success = false;
+        
         try {
+
+            // Check if receipt already exists in database
+        stmt = connection.prepareStatement("SELECT * FROM receipts WHERE user_id = ? AND order_id = ?");
+        stmt.setInt(1, user.getId());
+        stmt.setString(2, orderNum);
+        ResultSet rs = stmt.executeQuery();
+        // If the receipt already exists, return true
+        if (rs.next()) {
+            System.out.println("Duplicated receipt");
+            return false;//or false
+        }
+        stmt.close();
+
             // Prepare SQL statement with parameters
             stmt = connection.prepareStatement("INSERT INTO receipts (user_id, order_id, total, shipping_cost, price, shipping_paid, tax) VALUES (?, ?, ?, ?, ?, ?, ?)");
             stmt.setInt(1, user.getId());
@@ -52,6 +66,7 @@ public class ReceiptDAO {
             
             // Check if the SQL statement was successful
             if (rows > 0) {
+                
                 success = true;
             }
         } finally {
