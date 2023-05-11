@@ -1,14 +1,14 @@
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+// import java.io.FileNotFoundException;
+// import java.io.IOException;
+// import java.nio.charset.StandardCharsets;
+// import java.nio.file.Files;
+// import java.nio.file.Path;
+// import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Scanner;
+// import java.util.List;
+// import java.util.Scanner;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -158,7 +158,7 @@ public class ROIManager {
         }
     }//end of extractInfo
 	
-	String convertAndFind(String docText, String id, int idInt, int mod){
+	public String convertAndFind(String docText, String id, int idInt, int mod){
         String result;//result to be returned 
         nextEnd = idInt;//setting to idInt 
 
@@ -171,7 +171,7 @@ public class ROIManager {
 
     }//end of convert and find
 	
-	double profitCalc(String total, String shipCost, String tax){
+	public double profitCalc(String total, String shipCost, String tax){
 
         double profit = 0.0;//used for calculations
         

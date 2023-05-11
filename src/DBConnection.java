@@ -1,16 +1,16 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import javax.json.*;
+// import javax.json.*;
 
 
-public class DBConnection {
+public class DBConnection implements dbAO_IF{
     private static DBConnection instance;
     private Connection conn;
 
-    String DB_URL;
-    String USER;
-    String PASS;
+    private String DB_URL;
+    private String USER;
+    private String PASS;
 
     
     private DBConnection() throws SQLException {

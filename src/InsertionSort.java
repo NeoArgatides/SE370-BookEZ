@@ -8,9 +8,7 @@ import javax.swing.JTable;
 public class InsertionSort implements SortingStrat_IF{
     int method = 0; //0 for float, 1 for string
 
-    public InsertionSort() {
-
-    }
+    public InsertionSort() {}
     
     public InsertionSort(int method) {
         this.method = method;
