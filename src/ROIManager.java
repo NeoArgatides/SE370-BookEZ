@@ -124,7 +124,7 @@ public class ROIManager {
         orderNum = convertAndFind(s, "Order number ", nextEnd, 13);
         total = convertAndFind(s, "$", nextEnd, 1);
         shipCost = convertAndFind(s, "Cost: $", nextEnd, 7);
-        System.out.println(shipCost);
+       // System.out.println(shipCost);
         soldPrice = convertAndFind(s, "$", nextEnd, 1);
         shipPaid = convertAndFind(s, "$", nextEnd, 1);
         tax = convertAndFind(s, "$", nextEnd, 1);

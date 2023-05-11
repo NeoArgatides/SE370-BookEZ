@@ -142,8 +142,11 @@ public class ROITable extends JPanel {
 
         String colName = roiTable.getColumnName(col);
 
-        switch(colName) { //quicksort if one of these
-            case "Order #":
+        switch(colName) { //change strategy
+            // case "#":
+            //     sortingStrat = new BubbleSort(1);
+            //     break;
+			case "Order #":
                 sortingStrat = new InsertionSort(1);
                 break;
             case "Total":
