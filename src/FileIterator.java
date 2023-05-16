@@ -4,18 +4,18 @@ import java.util.Iterator;
 public class FileIterator implements Iterator<File> {
   private File[] files;
   private int position = 0;
-  
-  public FileIterator(File[] files){
+
+  public FileIterator(File[] files) {
     this.files = files;
-    } //this should be enough of an iterator to qualify
-    
+  } // Iterator
+
   @Override
-  public boolean hasNext(){
-      return position < files.length;
-  } //test for next
-    
+  public boolean hasNext() {
+    return position < files.length;
+  } // test for next
+
   @Override
-  public File next(){
-      return files[position++];
-  } //get the next
+  public File next() {
+    return files[position++];
+  } // get the next
 }

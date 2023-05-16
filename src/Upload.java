@@ -83,7 +83,7 @@ public class Upload extends JPanel {
 
 	private void extract() {
 		ROIManager r = mainFrame.getManager();
-		ExtractData ed = new ExtractData(r);
+		DataExtractor ed = new DataExtractor(r);
 		ed.extractData(this);
 		mainFrame.goToTable();
 	}

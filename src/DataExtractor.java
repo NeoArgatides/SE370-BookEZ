@@ -7,12 +7,12 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 
-public class ExtractData implements ExtractData_IF {
+public class DataExtractor implements DataExtractor_IF {
 
     private ROIManager r;
     // ExtractData ex;
 
-    public ExtractData(ROIManager r) {
+    public DataExtractor(ROIManager r) {
         this.r = r;
     }
 

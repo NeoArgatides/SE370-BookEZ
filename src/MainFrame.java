@@ -11,12 +11,12 @@ public class MainFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	File file = new File("accounts.txt");
 	String currentUser;
-	
+
 	private JPanel mainPanel = new JPanel();
 	Connection connection = null; // Create connection object
 	UserDAO userDAO;
 	ReceiptDAO receiptDAO;
-
+	DataExtractor_IF dataExtractor;
 
 	private JPanel loginPanel;
 	// private JPanel loginPanel = new Login(this, connection);
@@ -28,22 +28,27 @@ public class MainFrame extends JFrame {
 	private JPanel menuPanel = new Menu(this);
 	private CardLayout cl = new CardLayout();
 	private ROIManager manager;
-	
+
 	MainFrame() {
-        try {
-            connection = DBConnection.getInstance().getConnection();
+		try {
+			connection = DBConnection.getInstance().getConnection();
 			userDAO = new UserDAO(connection);
 			receiptDAO = new ReceiptDAO(connection);
 
-
-			//create login panel 
-			loginPanel = new Login(this,userDAO);
+			// create login panel
+			loginPanel = new Login(this, userDAO);
 			ROIPanel = new ROITable(this, receiptDAO, userDAO);
-			manager = new ROIManager(this, receiptDAO, userDAO);
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+			// create manager and extractor
+			manager = new ROIManager(this, receiptDAO, userDAO);
+			dataExtractor = new DataExtractor(manager);
+
+			// set the extractor in manager
+			manager.setDataExtractor(dataExtractor);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
 		/////////
 		getContentPane().add(mainPanel);
@@ -54,38 +59,38 @@ public class MainFrame extends JFrame {
 		mainPanel.add(uploadPanel, "3");
 		mainPanel.add(catalogPanel, "4");
 		mainPanel.add(ROIPanel, "5");
-		//((ROITable) ROIPanel).refreshTable();
+		// ((ROITable) ROIPanel).refreshTable();
 		mainPanel.setVisible(true);
-		
+
 		cl.show(mainPanel, "1");
 	}
 
 	File getFile() {
 		return file;
 	}
-	
+
 	void login(String username) {
 		cl.show(mainPanel, "2");
 		currentUser = username;
 		((Login) loginPanel).login();
 	}
-	
+
 	void goToLogin() {
 		cl.show(mainPanel, "1");
 	}
-	
+
 	void goToMenu() {
 		cl.show(mainPanel, "2");
 	}
-	
+
 	void goToUpload() {
 		cl.show(mainPanel, "3");
 	}
-	
+
 	void goToCatalog() {
 		cl.show(mainPanel, "4");
 	}
-	
+
 	void goToTable() {
 		try {
 			((ROITable) ROIPanel).refreshTable();
@@ -95,11 +100,11 @@ public class MainFrame extends JFrame {
 		}
 		cl.show(mainPanel, "5");
 	}
-	
+
 	String getUser() {
 		return currentUser;
 	}
-	
+
 	ROIManager getManager() {
 		return manager;
 	}
